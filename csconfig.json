@@ -1,0 +1,19 @@
+{
+    "files": [
+        "lib/src/prolog.coffee",
+        "lib/src/VisibleChildIterator.coffee",
+        "lib/src/ApplicationContextMenuItem.coffee",
+        "lib/src/GenericApplicationButton.coffee",
+        "lib/src/TransientButton.coffee",
+        "lib/src/ApplicationButton.coffee",
+        "lib/src/PlaceButton.coffee",
+        "lib/src/RecentButton.coffee",
+        "lib/src/RecentClearButton.coffee",
+        "lib/src/CategoryButton.coffee",
+        "lib/src/PlaceCategoryButton.coffee",
+        "lib/src/RecentCategoryButton.coffee",
+        "lib/src/FavoritesButton.coffee",
+        "lib/src/TextBoxItem.coffee"
+    ]
+	
+}
