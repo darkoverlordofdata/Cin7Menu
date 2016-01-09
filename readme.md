@@ -3,7 +3,7 @@
          | (__| | ' \ / /  | |\/| / -_) ' \ || |
           \___|_|_||_/_/   |_|  |_\___|_||_\_,_|
                                         
-#Cin7Menu
 
-Windows 7 style Menu for Linux Mint 17.3 / Cinnamon
+## Is it a sin for Linux to look like Windows?
+### Cin7Menu - Windows 7 style Menu for Linux Mint 17.3 / Cinnamon
 
