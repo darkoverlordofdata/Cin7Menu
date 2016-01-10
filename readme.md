@@ -7,4 +7,6 @@
 ## Is it a sin for Linux to look like Windows?
 ### Cin7Menu - Windows 7 style Menu for Linux Mint 17.3 / Cinnamon
 
+Based on StarkMenu@mintystark
+
 Status: just started wip. 
