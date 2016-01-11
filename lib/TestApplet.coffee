@@ -4,7 +4,7 @@ Util = imports.misc.util
 Gettext = imports.gettext.domain('cinnamon-applets')
 _ = Gettext.gettext
 
-class MyApplet
+class TestApplet
   __proto__: base = Applet.IconApplet.prototype
 
   name: 'Gracie'
@@ -26,4 +26,3 @@ class MyApplet
     return
 
 
-main = (metadata, orientation)-> new MyApplet(orientation)

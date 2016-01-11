@@ -1197,5 +1197,4 @@ class MyApplet
           return false
     return true
 
-main = (metadata, orientation, panel_height, instance_id) -> new MyApplet(orientation, panel_height, instance_id)
 
