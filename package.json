@@ -7,30 +7,17 @@
     "build": []
   },
   "scripts": {
-    "build": "cat lib/src/prolog.coffee LF lib/src/VisibleChildIterator.coffee LF lib/src/ApplicationContextMenuItem.coffee LF lib/src/buttons/GenericApplicationButton.coffee LF lib/src/buttons/TransientButton.coffee LF lib/src/buttons/ApplicationButton.coffee LF lib/src/buttons/PlaceButton.coffee LF lib/src/buttons/RecentButton.coffee LF lib/src/buttons/RecentClearButton.coffee LF lib/src/buttons/CategoryButton.coffee LF lib/src/buttons/PlaceCategoryButton.coffee LF lib/src/buttons/RecentCategoryButton.coffee LF lib/src/buttons/FavoritesButton.coffee LF lib/src/AppPopupSubMenuMenuItem.coffee LF lib/src/TextBoxItem.coffee LF lib/src/AllProgramsItem.coffee LF lib/src/HoverIcon.coffee LF lib/src/ShutdownContextMenuItem.coffee LF lib/src/ShutdownMenu.coffee LF lib/src/CategoriesApplicationsBox.coffee LF lib/src/RightButtonsBox.coffee LF lib/src/FavoritesBox.coffee LF lib/src/MyApplet.coffee | coffee -cs > build/Cin7Menu.js",
+    "build": "cat lib/src/prolog.coffee LF lib/src/VisibleChildIterator.coffee LF lib/src/ApplicationContextMenuItem.coffee LF lib/src/buttons/GenericApplicationButton.coffee LF lib/src/buttons/TransientButton.coffee LF lib/src/buttons/ApplicationButton.coffee LF lib/src/buttons/PlaceButton.coffee LF lib/src/buttons/RecentButton.coffee LF lib/src/buttons/RecentClearButton.coffee LF lib/src/buttons/CategoryButton.coffee LF lib/src/buttons/PlaceCategoryButton.coffee LF lib/src/buttons/RecentCategoryButton.coffee LF lib/src/buttons/FavoritesButton.coffee LF lib/src/AppPopupSubMenuMenuItem.coffee LF lib/src/TextBoxItem.coffee LF lib/src/AllProgramsItem.coffee LF lib/src/HoverIcon.coffee LF lib/src/ShutdownContextMenuItem.coffee LF lib/src/ShutdownMenu.coffee LF lib/src/CategoriesApplicationsBox.coffee LF lib/src/RightButtonsBox.coffee LF lib/src/FavoritesBox.coffee LF lib/src/MyApplet.coffee | coffee -cbs > Cin7Menu@darkoverlordofdata.com/applet.js",
     "clean": "rm -rf build/*",
-    "prebuild": "npm run clean -s",
-    "test": "NODE_ENV=test mocha --compilers coffee:coffee-script --require test/test_helper.js --recursive"
+    "prebuild": "npm run clean -s"
   },
   "author": "darkoverlordofdata@gmail.com",
   "license": "MIT",
   "directories": {
-    "lib": "./lib",
-    "example": "./example"
+    "lib": "./lib"
   },
   "devDependencies": {
-    "chai": "~1.9.2",
-    "coffee-script": "1.9.0",
-    "coffee2closure": "^0.1.12",
-    "gulp": "^3.9.0",
-    "gulp-gh-pages": "^0.5.2",
-    "gulp-manifest": "0.0.7",
-    "gulp-shell": "^0.4.2",
-    "gulp-webserver": "^0.9.1",
-    "liquid.coffee": "^0.1.1",
-    "mocha": "~2.0.1",
-    "morgan": "^1.6.1",
-    "walker": "^1.0.7"
+    "coffee-script": "^1.10.0"
   },
   "dependencies": {}
 }

@@ -23,16 +23,12 @@ ClosureCompiler = 8   # plovr
 
 # paths:
 LIB_NAME        = "Cin7Menu"
-COMPILER_JAR    = "packages/closure-compiler/lib/vendor/compiler.jar"
 CSCONFIG        = "./csconfig.json"
 
 ###
 # Generate package.script
 ###
 module.exports = (project, options = {}) ->
-
-  # get project config
-  csconfig = if fs.existsSync(CSCONFIG) then require(CSCONFIG) else files: []
 
   ### build the project ###
   build: do ->
@@ -44,7 +40,7 @@ module.exports = (project, options = {}) ->
     ###
     files = require(CSCONFIG).files.join(" LF ")
     step.push """
-      cat #{files} | coffee -cs > build/#{LIB_NAME}.js
+      cat #{files} | coffee -cbs > Cin7Menu@darkoverlordofdata.com/applet.js
     """
       
     return step
@@ -57,13 +53,5 @@ module.exports = (project, options = {}) ->
   ### prepare for build ###
   prebuild: """
     npm run clean -s
-  """
-
-  ### run the unit tests ###
-  test: """
-    NODE_ENV=test mocha \
-      --compilers coffee:coffee-script \
-      --require test/test_helper.js \
-      --recursive
   """
 
