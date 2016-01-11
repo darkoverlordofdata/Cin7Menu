@@ -9,4 +9,13 @@
 
 Based on StarkMenu@mintystark
 
-Status: just started wip. 
+Status: just started wip
+
+
+## Install & Build
+ 
+$ git clone git@github.com:darkoverlordofdata/Cin7Menu.git
+$ cd Cin7Menu
+$ npm install
+$ npm run build
+$ mv ./Cin7Menu@darkoverlordofdata.com ~./local/share/cinnamon/applets

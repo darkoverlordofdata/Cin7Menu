@@ -1,0 +1,30 @@
+{
+    "files": [
+        "lib/src/prolog.coffee",
+        "lib/src/VisibleChildIterator.coffee",
+        "lib/src/ApplicationContextMenuItem.coffee",
+        "lib/src/buttons/GenericApplicationButton.coffee",
+        "lib/src/buttons/TransientButton.coffee",
+        "lib/src/buttons/ApplicationButton.coffee",
+        "lib/src/buttons/PlaceButton.coffee",
+        "lib/src/buttons/RecentButton.coffee",
+        "lib/src/buttons/RecentClearButton.coffee",
+        "lib/src/buttons/CategoryButton.coffee",
+        "lib/src/buttons/PlaceCategoryButton.coffee",
+        "lib/src/buttons/RecentCategoryButton.coffee",
+        "lib/src/buttons/FavoritesButton.coffee",
+        "lib/src/AppPopupSubMenuMenuItem.coffee",
+        "lib/src/TextBoxItem.coffee",
+        "lib/src/AllProgramsItem.coffee",
+        "lib/src/HoverIcon.coffee",
+        "lib/src/ShutdownContextMenuItem.coffee",
+        "lib/src/ShutdownMenu.coffee",
+        "lib/src/CategoriesApplicationsBox.coffee",
+        "lib/src/RightButtonsBox.coffee",
+        "lib/src/FavoritesBox.coffee",
+        "lib/src/MyApplet.coffee",
+        "lib/TestApplet.coffee",
+        "lib/Main.coffee"
+    ]
+	
+}
