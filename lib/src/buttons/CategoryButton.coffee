@@ -1,11 +1,11 @@
 class CategoryButton
-  __proto__: PopupMenu.PopupBaseMenuItem.prototype
+  __proto__: base = PopupMenu.PopupBaseMenuItem.prototype
   
   constructor:(app) ->
     @_init(app)
     
   _init:(category) ->
-    PopupMenu.PopupBaseMenuItem.prototype._init.call(this, hover: false)
+    base._init.call(this, hover: false)
 
     @actor.set_style_class_name('menu-category-button')
     if category

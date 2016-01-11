@@ -1,11 +1,11 @@
 class MyApplet
-  __proto__: Applet.TextIconApplet.prototype
+  __proto__: base = Applet.TextIconApplet.prototype
 
   constructor:(orientation, panel_height, instance_id) ->
     @_init(orientation, panel_height, instance_id)
 
   _init:(orientation, panel_height, instance_id) ->
-    Applet.TextIconApplet.prototype._init.call(this, orientation, panel_height, instance_id)
+    base._init.call(this, orientation, panel_height, instance_id)
     try
       @set_applet_tooltip(_("Menu"))
 
@@ -820,18 +820,18 @@ class MyApplet
     @settings.bindProperty(Settings.BindingDirection.IN, "favorite-icon-size", "favorite_icon_size", @_refreshFavs, null)
 
     vscroll = @applicationsScrollBox.get_vscroll_bar()
-    vscroll.connect 'scroll-start', () ->
-        @menu.passEvents = true
+    vscroll.connect 'scroll-start', () =>
+      @menu.passEvents = true
 
-    vscroll.connect 'scroll-stop',() ->
-        @menu.passEvents = false
+    vscroll.connect 'scroll-stop',() =>
+      @menu.passEvents = false
 
     vscroll = @categoriesScrollBox.get_vscroll_bar()
-    vscroll.connect 'scroll-start', () ->
-        @menu.passEvents = true
+    vscroll.connect 'scroll-start', () =>
+      @menu.passEvents = true
 
-    vscroll.connect 'scroll-stop', () ->
-        @menu.passEvents = false
+    vscroll.connect 'scroll-stop', () =>
+      @menu.passEvents = false
 
     @_refreshFavs()
 
@@ -877,7 +877,325 @@ class MyApplet
 
     Mainloop.idle_add () =>
       @_clearAllSelections()
+    return
+
+  switchPanes:(pane) ->
+    if pane is "apps"
+      @leftPane.set_child(@appsBox)
+      @appsButton.label.set_text(" "+_(@favoritesLabel))
+      @rightButtonsBox.actor.hide()
+      @_appletStyles("apps")
+    else
+      @leftPane.set_child(@favsBox)
+      @appsButton.label.set_text(" "+_(@allProgramsLabel))
+      if @menu.showQuicklinks
+        @rightButtonsBox.actor.show()
+      @_appletStyles("favs")
+    @rightButtonsBox.shutdown.label.set_text(_(@shutdownLabel))
+    return
+
+  _updateVFade:() ->
+    mag_on = @a11y_settings.get_boolean("screen-magnifier-enabled")
+    if mag_on
+      @applicationsScrollBox.style_class = "menu-applications-scrollbox"
+    else
+      @applicationsScrollBox.style_class = "vfade menu-applications-scrollbox"
+    return
+
+  _update_autoscroll:() ->
+    @applicationsScrollBox.set_auto_scrolling(@autoscroll_enabled)
 
 
+  _clearAllSelections:() ->
+    actors = @applicationsBox.get_children()
+    for actor in actors
+      actor.style_class = "menu-application-button"
+      actor.hide()
+    actors = @categoriesBox.get_children()
+    for actor in actors
+      actor.style_class = "menu-category-button"
+      actor.show()
+    return
 
+  _select_category:(dir, categoryButton) ->
+    if dir
+      @_displayButtons(@_listApplications(dir.get_menu_id()))
+    else
+      @_displayButtons(@_listApplications(null))
+    @closeApplicationsContextMenus(null, false)
+    @_scrollToCategoryButton(categoryButton)
+    return
+
+  closeApplicationsContextMenus:(excludeApp, animate) ->
+    for app in @_applicationsButtons
+      if app isnt excludeApp and app.menu.isOpen
+        if animate
+          app.toggleMenu()
+        else
+          app.closeMenu()
+
+  _onApplicationButtonRealized:(actor) ->
+    if actor.get_width() > @_applicationsBoxWidth
+      @_applicationsBoxWidth = actor.get_width()
+      @applicationsBox.set_width(@_applicationsBoxWidth + 20)
+    return
+
+  _displayButtons:(appCategory, places, recent, apps, autocompletes) ->
+    innerapps = @applicationsBox.get_children()
+    for app in innerapps
+      app.hide()
+
+    if appCategory
+      if appCategory is "all"
+        @_applicationsButtons.forEach (item, index) ->
+          if not item.actor.visible
+            item.actor.show()
+          return
+      else
+        @_applicationsButtons.forEach (item, index) ->
+          if item.category.indexOf(appCategory) isnt -1
+            if not item.actor.visible
+              item.actor.show()
+            return
+          else
+            if item.actor.visible
+              item.actor.hide()
+
+    else if apps
+      for button in @_applicationsButtons
+        if apps.indexOf(button.name) isnt -1
+          if not button.actor.visible
+            button.actor.show()
+
+        else
+          if button.actor.visible
+            button.actor.hide()
+
+    else
+      @_applicationsButtons.forEach (item, index) ->
+        if item.actor.visible
+          item.actor.hide()
+          return
+
+    if places
+      if places is -1
+        @_placesButtons.forEach (item, index) ->
+          item.actor.show()
+          return
+      else
+        for button in @_placesButtons
+          if places.indexOf(button.button_name) isnt -1
+            if not button.actor.visible
+              button.actor.show()
+          else
+            if button.actor.visible
+              button.actor.hide()
+
+    else
+      @_placesButtons.forEach (item, index) ->
+        if item.actor.visible
+          item.actor.hide()
+        return
+
+    if recent
+      if recent is -1
+        @_recentButtons.forEach (item, index) ->
+          if not item.actor.visible
+            item.actor.show()
+          return
+      else
+        for button in @_recentButtons
+          if recent.indexOf(button.button_name) isnt -1
+            if not @_recentButtons[i].actor.visible
+              @_recentButtons[i].actor.show()
+          else
+            if button.actor.visible
+              button.actor.hide()
+    else
+      @_recentButtons.forEach (item, index) ->
+        if item.actor.visible
+          item.actor.hide()
+
+    if autocompletes
+        for auto in autocompletes
+          button = new TransientButton(this, auto)
+          button.actor.connect('realize', Lang.bind(this, @_onApplicationButtonRealized))
+          button.actor.connect('leave-event', Lang.bind(this, @_appLeaveEvent, button))
+          @_addEnterEvent(button, Lang.bind(this, @_appEnterEvent, button))
+          @_transientButtons.push(button)
+          @applicationsBox.add_actor(button.actor)
+          button.actor.realize()
+
+    return
+
+  _setCategoriesButtonActive:(active) ->
+    try
+      categoriesButtons = @categoriesBox.get_children()
+      for button in categoriesButtons
+        if active
+          button.set_style_class_name("menu-category-button")
+        else
+          button.set_style_class_name("menu-category-button-greyed")
+    catch e
+      global.log(e)
+    return
+
+  resetSearch:() ->
+    @searchEntry.set_text("")
+    @searchActive = false
+    @_clearAllSelections()
+    @_setCategoriesButtonActive(true)
+    global.stage.set_key_focus(@searchEntry)
+    return
+
+  _onSearchTextChanged: (se, prop) ->
+    if @menuIsOpening
+      @menuIsOpening = false
+      return false
+    else
+      searchString = @searchEntry.get_text()
+      @searchActive = searchString isnt ''
+      @_fileFolderAccessActive = @searchActive and @searchFilesystem
+      @_clearAllSelections()
+
+      if @searchActive
+        @searchEntry.set_secondary_icon(@_searchActiveIcon)
+        if @_searchIconClickedId is 0
+          @_searchIconClickedId = @searchEntry.connect 'secondary-icon-clicked',() ->
+            @resetSearch()
+            @_select_category(null, @_allAppsCategoryButton)
+            return
+        @_setCategoriesButtonActive(false)
+        @_doSearch()
+      else
+        if @_searchIconClickedId > 0
+          @searchEntry.disconnect(@_searchIconClickedId)
+        @_searchIconClickedId = 0
+        @searchEntry.set_secondary_icon(@_searchInactiveIcon)
+        @_previousSearchPattern = ""
+        @_setCategoriesButtonActive(true)
+        @_select_category(null, @_allAppsCategoryButton)
+    return false
+
+  _listBookmarks:(pattern) ->
+    bookmarks = Main.placesManager.getBookmarks()
+    res = new Array()
+    for bookmark in bookmarks
+      if not pattern or bookmark.name.toLowerCase().indexOf(pattern) isnt -1 then res.push(bookmark)
+    return res
+
+  _listDevices:(pattern)->
+    devices = Main.placesManager.getMounts()
+    res = new Array()
+    for device in devices
+      if not pattern or device.name.toLowerCase().indexOf(pattern) isnt -1 then res.push(device)
+    return res
+
+  _listApplications:(category_menu_id, pattern) ->
+    applist = new Array()
+    if category_menu_id
+      applist = category_menu_id
+    else
+      applist = "all"
+    if pattern
+      res = new Array()
+      for button in @_applicationsButtons
+        app = button.app
+        if app.get_name().toLowerCase().indexOf(pattern) isnt -1 or (app.get_description() and app.get_description().toLowerCase().indexOf(pattern) isnt -1) or (app.get_id() and app.get_id().slice(0, -8).toLowerCase().indexOf(pattern) isnt -1)
+          res.push(app.get_name())
+    else
+      res = applist
+    return res
+
+  _doSearch:() ->
+    if @leftPane.get_child() is @favsBox then @switchPanes("apps")
+    pattern = @searchEntryText.get_text().replace(/^\s+/g, '').replace(/\s+$/g, '').toLowerCase()
+    if pattern is @_previousSearchPattern then return false
+    @_previousSearchPattern = pattern
+    @_activeContainer = null
+    @_activeActor = null
+    @_selectedItemIndex = null
+    @_previousTreeItemIndex = null
+    @_previousTreeSelectedActor = null
+    @_previousSelectedActor = null
+
+    # _listApplications returns all the applications when the search
+    # string is zero length. This will happend if you type a space
+    # in the search entry.
+    if pattern.length is 0
+      return false
+
+    appResults = @_listApplications(null, pattern)
+    placesResults = new Array()
+    bookmarks = @_listBookmarks(pattern)
+    for bookmark in bookmarks
+      placesResults.push(bookmark.name)
+    devices = @_listDevices(pattern)
+    for device in devices
+      placesResults.push(device.name)
+    recentResults = new Array()
+    for button in @_recentButtons.length
+      if not(button instanceof RecentClearButton) and button.button_name.toLowerCase().indexOf(pattern) isnt -1
+        recentResults.push(button.button_name)
+
+    acResults = new Array() # search box autocompletion results
+    if @searchFilesystem
+      # Don't use the pattern here, as filesystem is case sensitive
+      acResults = @_getCompletions(@searchEntryText.get_text())
+    @_displayButtons(null, placesResults, recentResults, appResults, acResults)
+
+    @appBoxIter.reloadVisible()
+    if @appBoxIter.getNumVisibleChildren() > 0
+      item_actor = @appBoxIter.getFirstVisible()
+      @_selectedItemIndex = @appBoxIter.getAbsoluteIndexOfChild(item_actor)
+      @_activeContainer = @applicationsBox
+      if item_actor and item_actor isnt- @searchEntry
+        item_actor._delegate.emit('enter-event')
+    return false
+
+  _getCompletion:(text) ->
+    if text.indexOf('/') isnt -1
+      if text.substr(text.length - 1) is '/'
+        return ''
+      else
+        return @_pathCompleter.get_completion_suffix(text)
+    else
+    return false
+
+  _getCompletions:(text) ->
+    if text.indexOf('/') isnt -1
+      return @_pathCompleter.get_completions(text)
+    else
+      return new Array()
+
+  _run:(input) ->
+    command = input
+
+    @_commandError = false
+    if input
+      path = null
+      if input.charAt(0) is '/'
+        path = input
+      else
+        if input.charAt(0) is '~'
+          input = input.slice(1)
+        path = GLib.get_home_dir() + '/' + input
+
+        if GLib.file_test(path, GLib.FileTest.EXISTS)
+          file = Gio.file_new_for_path(path)
+          try
+            Gio.app_info_launch_default_for_uri(file.get_uri(),
+            global.create_app_launch_context())
+          catch e
+            # The exception from gjs contains an error string like:
+            #     Error invoking Gio.app_info_launch_default_for_uri: No application
+            #     is registered as handling this file
+            # We are only interested in the part after the first colon.
+            #var message = e.message.replace(/[^:]*: *(.+)/, '$1')
+            return false
+        else
+          return false
+    return true
+
+main = (metadata, orientation, panel_height, instance_id) -> new MyApplet(orientation, panel_height, instance_id)
 

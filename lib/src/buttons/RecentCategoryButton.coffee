@@ -1,11 +1,11 @@
 class RecentCategoryButton
-  __proto__: PopupMenu.PopupBaseMenuItem.prototype
+  __proto__: base = PopupMenu.PopupBaseMenuItem.prototype
   
   constructor:(app) ->
     @_init(app)
     
   _init:(category) ->
-    PopupMenu.PopupBaseMenuItem.prototype._init.call(this, {hover: false})
+    base._init.call(this, {hover: false})
     @actor.set_style_class_name('menu-category-button')
     @actor._delegate = this
     @label = new St.Label(text: _("Recent Files"), style_class: 'menu-category-button-label')

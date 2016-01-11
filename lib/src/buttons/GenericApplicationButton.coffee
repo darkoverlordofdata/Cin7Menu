@@ -1,5 +1,5 @@
 class GenericApplicationButton
-  __proto__: PopupMenu.PopupSubMenuMenuItem.prototype
+  __proto__: base = PopupMenu.PopupSubMenuMenuItem.prototype
   
   constructor:(appsMenuButton, app) ->
     @_init(appsMenuButton, app)
@@ -7,7 +7,7 @@ class GenericApplicationButton
   _init:(appsMenuButton, app) ->
     @app = app
     @appsMenuButton = appsMenuButton
-    PopupMenu.PopupBaseMenuItem.prototype._init.call(this, hover: false)
+    base._init.call(this, hover: false)
 
     @withMenu = withMenu
     if @withMenu

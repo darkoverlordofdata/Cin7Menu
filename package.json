@@ -1,14 +1,18 @@
 {
-  "name": "Template.coffee",
+  "name": "Cin7Menu",
   "version": "0.0.1",
-  "description": "{{ description }}",
+  "description": "Cin7Menu for Linux",
   "main": "index.js",
   "config": {
     "build": []
   },
   "scripts": {
+    "build": "cat lib/src/prolog.coffee LF lib/src/VisibleChildIterator.coffee LF lib/src/ApplicationContextMenuItem.coffee LF lib/src/buttons/GenericApplicationButton.coffee LF lib/src/buttons/TransientButton.coffee LF lib/src/buttons/ApplicationButton.coffee LF lib/src/buttons/PlaceButton.coffee LF lib/src/buttons/RecentButton.coffee LF lib/src/buttons/RecentClearButton.coffee LF lib/src/buttons/CategoryButton.coffee LF lib/src/buttons/PlaceCategoryButton.coffee LF lib/src/buttons/RecentCategoryButton.coffee LF lib/src/buttons/FavoritesButton.coffee LF lib/src/AppPopupSubMenuMenuItem.coffee LF lib/src/TextBoxItem.coffee LF lib/src/AllProgramsItem.coffee LF lib/src/HoverIcon.coffee LF lib/src/ShutdownContextMenuItem.coffee LF lib/src/ShutdownMenu.coffee LF lib/src/CategoriesApplicationsBox.coffee LF lib/src/RightButtonsBox.coffee LF lib/src/FavoritesBox.coffee LF lib/src/MyApplet.coffee | coffee -cs > build/Cin7Menu.js",
+    "clean": "rm -rf build/*",
+    "prebuild": "npm run clean -s",
+    "test": "NODE_ENV=test mocha --compilers coffee:coffee-script --require test/test_helper.js --recursive"
   },
-  "author": "{{ author }}",
+  "author": "darkoverlordofdata@gmail.com",
   "license": "MIT",
   "directories": {
     "lib": "./lib",
@@ -28,6 +32,5 @@
     "morgan": "^1.6.1",
     "walker": "^1.0.7"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
