@@ -1,11 +1,11 @@
 class PlaceButton
-  __proto__: base = PopupMenu.PopupBaseMenuItem.prototype
+  __proto__: PopupMenu.PopupBaseMenuItem.prototype
   
   constructor:(appsMenuButton, place, button_name) ->
     @_init(appsMenuButton, place, button_name)
 
   _init:(appsMenuButton, place, button_name) ->
-    base._init.call(this, hover: false)
+    PopupMenu.PopupBaseMenuItem.prototype._init.call(this, hover: false)
     @appsMenuButton = appsMenuButton
     @place = place
     @button_name = button_name

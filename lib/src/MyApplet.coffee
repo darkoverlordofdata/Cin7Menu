@@ -1,11 +1,11 @@
 class MyApplet
-  __proto__: base = Applet.TextIconApplet.prototype
+  __proto__: Applet.TextIconApplet.prototype
 
   constructor:(orientation, panel_height, instance_id) ->
     @_init(orientation, panel_height, instance_id)
 
   _init:(orientation, panel_height, instance_id) ->
-    base._init.call(this, orientation, panel_height, instance_id)
+    Applet.TextIconApplet.prototype._init.call(this, orientation, panel_height, instance_id)
     try
       @set_applet_tooltip(_("Menu"))
 
@@ -15,7 +15,7 @@ class MyApplet
 
       @actor.connect('key-press-event', Lang.bind(this, @_onSourceKeyPress))
 
-      @settings = new Settings.AppletSettings(this, "StarkMenu@mintystark", instance_id)
+      @settings = new Settings.AppletSettings(this, "Cin7Menu@darkoverlordofdata.com", instance_id)
 
       @settings.bindProperty(Settings.BindingDirection.IN, "show-recent", "showRecent", @_refreshPlacesAndRecent, null)
       @settings.bindProperty(Settings.BindingDirection.IN, "show-places", "showPlaces", @_refreshPlacesAndRecent, null)
@@ -115,9 +115,13 @@ class MyApplet
 
       @settings.bindProperty(Settings.BindingDirection.IN, "quicklink-options", "quicklinkOptions", @_updateQuickLinks, null)
       @_updateQuickLinks()
+      global.log "@menu.quicklinks"
+      global.log @menu.quicklinks
 
     catch e
       global.logError(e)
+
+    return
 
   openMenu:() ->
     @menu.open(true)
@@ -535,7 +539,7 @@ class MyApplet
         devices = @_listDevices()
         places = bookmarks.concat(devices)
         for place in places
-          do (button = new PlaceButton(this, place, place.name)) ->
+          do (button = new PlaceButton(this, place, place.name)) =>
 
             @_addEnterEvent button, =>
               @_clearPrevAppSelection(button.actor)
@@ -568,7 +572,7 @@ class MyApplet
         devices = @_listDevices()
         places = bookmarks.concat(devices)
         for place in places
-          do (button = new PlaceButton(this, place, place.name)) ->
+          do (button = new PlaceButton(this, place, place.name)) =>
 
             @_addEnterEvent button, =>
               @_clearPrevAppSelection(button.actor)
@@ -617,7 +621,7 @@ class MyApplet
 
         id = 0
         while id < MAX_RECENT_FILES and id < @RecentManager._infosByTimestamp.length
-          do (button = new RecentButton(this, @RecentManager._infosByTimestamp[id++])) ->
+          do (button = new RecentButton(this, @RecentManager._infosByTimestamp[id++])) =>
 
             @_addEnterEvent button, =>
               @_clearPrevAppSelection(button.actor)
@@ -672,7 +676,7 @@ class MyApplet
       app = appSys.lookup_app(launcher)
       if not app then app = appSys.lookup_settings_app(launcher)
       if app
-        do (button = new FavoritesButton(this, app, launchers.length, @favorite_icon_size)) -> # + 3 because we're adding 3 system buttons at the bottom
+        do (button = new FavoritesButton(this, app, launchers.length, @favorite_icon_size)) => # + 3 because we're adding 3 system buttons at the bottom
           @_favoritesButtons[app] = button
           favoritesBox.actor.add_actor(button.actor, y_align: St.Align.END, y_fill: false)
           favoritesBox.actor.add_actor(button.menu.actor, y_align: St.Align.END, y_fill: false)
@@ -687,7 +691,7 @@ class MyApplet
           button.actor.connect 'leave-event', =>
             @selectedAppTitle.set_text("")
             @selectedAppDescription.set_text("")
-
+    return
 
   _loadCategory:(dir, top_dir) ->
     iter = dir.iter()
@@ -846,7 +850,7 @@ class MyApplet
     @rightButtonsBox.actor.style_class = "right-buttons-box"
     @mainBox = new St.BoxLayout( style_class: 'menu-applications-box', vertical:false )
 
-    @applicationsByCategory = 
+    @applicationsByCategory = {}
     @_refreshApps()
 
     @appBoxIter = new VisibleChildIterator(this, @applicationsBox)

@@ -1,0 +1,24 @@
+{
+    "version": "0.1.0",
+    "command": "npm",
+    "isShellCommand": true,
+    "args": ["run"],
+    "tasks": [
+        {
+            "taskName": "build",
+            "args": [],
+            "isBuildCommand": false,
+            "problemMatcher": []
+        },{
+            "taskName": "clean",
+            "args": [],
+            "isBuildCommand": false,
+            "problemMatcher": []
+        },{
+            "taskName": "deploy",
+            "args": [],
+            "isBuildCommand": false,
+            "problemMatcher": []
+        }
+    ]
+}

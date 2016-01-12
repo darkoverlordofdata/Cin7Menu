@@ -1,11 +1,11 @@
 class ApplicationButton
-  __proto__: base = GenericApplicationButton.prototype
+  __proto__: GenericApplicationButton.prototype
   
   constructor:(appsMenuButton, app) ->
     @_init(appsMenuButton, app)
     
   _init:(appsMenuButton, app) ->
-    base._init.call(this, appsMenuButton, app, true)
+    GenericApplicationButton.prototype._init.call(this, appsMenuButton, app, true)
     @category = new Array()
     @actor.set_style_class_name('menu-application-button')
     @icon = @app.create_icon_texture(APPLICATION_ICON_SIZE)

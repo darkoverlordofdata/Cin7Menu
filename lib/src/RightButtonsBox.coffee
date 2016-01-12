@@ -52,43 +52,46 @@ class RightButtonsBox
     @itemsBox.add_actor(@hoverIcon.userBox)
 
     @quicklinks = []
-    for link, i in @menu.quicklinks
-      if link isnt ''
-        if link is 'separator'
-          @separator = new PopupMenu.PopupSeparatorMenuItem()
-          @separator.actor.set_style("padding: 0em 0em min-width: 1px")
-          @itemsBox.add_actor(@separator.actor)
-        else
-          split = link.split(',')
-          if split.length is 3
-            @quicklinks[i] = new TextBoxItem(_(split[0]), split[1], "Util.spawnCommandLine('"+split[2]+"')", @menu, @hoverIcon, false)
-            @itemsBox.add_actor(@quicklinks[i].actor)
+    global.log @menu.quicklinks
 
-        @shutdown = new TextBoxItem(_("Shutdown"), "system-shutdown", "Session.ShutdownRemote()", @menu, @hoverIcon, false)
-        @logout = new TextBoxItem(_("Logout"), "gnome-logout", "Session.LogoutRemote(0)", @menu, @hoverIcon, false)
-        screensaver_settings = new Gio.Settings( schema: "org.cinnamon.desktop.screensaver" )
-        screensaver_dialog = Gio.file_new_for_path("/usr/bin/cinnamon-screensaver-command")
-        if screensaver_dialog.query_exists(null) 
-          if screensaver_settings.get_boolean("ask-for-away-message")
-            @lock = new TextBoxItem(_("Lock"), "gnome-lockscreen", "Util.spawnCommandLine('cinnamon-screensaver-lock-dialog')", @menu, @hoverIcon, false)
+    if @menu.quicklinks
+      for link, i in @menu.quicklinks
+        if link isnt ''
+          if link is 'separator'
+            @separator = new PopupMenu.PopupSeparatorMenuItem()
+            @separator.actor.set_style("padding: 0em 0em min-width: 1px")
+            @itemsBox.add_actor(@separator.actor)
           else
-            @lock = new TextBoxItem(_("Lock"), "gnome-lockscreen", "Util.spawnCommandLine('cinnamon-screensaver-command --lock')", @menu, @hoverIcon, false)
+            split = link.split(',')
+            if split.length is 3
+              @quicklinks[i] = new TextBoxItem(_(split[0]), split[1], "Util.spawnCommandLine('"+split[2]+"')", @menu, @hoverIcon, false)
+              @itemsBox.add_actor(@quicklinks[i].actor)
 
-        @shutdownMenu = new ShutdownMenu(@menu, @hoverIcon)
+          @shutdown = new TextBoxItem(_("Shutdown"), "system-shutdown", "Session.ShutdownRemote()", @menu, @hoverIcon, false)
+          @logout = new TextBoxItem(_("Logout"), "gnome-logout", "Session.LogoutRemote(0)", @menu, @hoverIcon, false)
+          screensaver_settings = new Gio.Settings( schema: "org.cinnamon.desktop.screensaver" )
+          screensaver_dialog = Gio.file_new_for_path("/usr/bin/cinnamon-screensaver-command")
+          if screensaver_dialog.query_exists(null)
+            if screensaver_settings.get_boolean("ask-for-away-message")
+              @lock = new TextBoxItem(_("Lock"), "gnome-lockscreen", "Util.spawnCommandLine('cinnamon-screensaver-lock-dialog')", @menu, @hoverIcon, false)
+            else
+              @lock = new TextBoxItem(_("Lock"), "gnome-lockscreen", "Util.spawnCommandLine('cinnamon-screensaver-command --lock')", @menu, @hoverIcon, false)
 
-        @shutdownBox.add_actor(@shutdown.actor)
-        @shutdownBox.add_actor(@shutdownMenu.actor)
+          @shutdownMenu = new ShutdownMenu(@menu, @hoverIcon)
 
-        @shutDownMenuBox.add_actor(@shutdownBox)
-        @shutDownMenuBox.add_actor(@shutdownMenu.menu.actor)
+          @shutdownBox.add_actor(@shutdown.actor)
+          @shutdownBox.add_actor(@shutdownMenu.actor)
 
-        @shutDownIconBox.add_actor(@logout.actor)
-        @shutDownIconBox.add_actor(@lock.actor)
+          @shutDownMenuBox.add_actor(@shutdownBox)
+          @shutDownMenuBox.add_actor(@shutdownMenu.menu.actor)
 
-        @itemsBox.add_actor(@shutDownMenuBox)
-        @shutDownMenuBox.set_style('min-height: 82px')
+          @shutDownIconBox.add_actor(@logout.actor)
+          @shutDownIconBox.add_actor(@lock.actor)
 
-        @itemsBox.add_actor(@shutDownIconBox)
+          @itemsBox.add_actor(@shutDownMenuBox)
+          @shutDownMenuBox.set_style('min-height: 82px')
+
+          @itemsBox.add_actor(@shutDownIconBox)
 
 
   _getPreferredHeight:(actor, forWidth, alloc) ->

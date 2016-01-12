@@ -1,12 +1,12 @@
 class ShutdownContextMenuItem
-  __proto__: base = ApplicationContextMenuItem.prototype
+  __proto__: ApplicationContextMenuItem.prototype
   
   constructor:(parentMenu, menu, label, action) ->
     @_init(parentMenu, menu, label, action)
     
   _init:(parentMenu, menu, label, action) ->
     @parentMenu = parentMenu
-    base._init.call(this, menu, label, action)
+    ApplicationContextMenuItem.prototype._init.call(this, menu, label, action)
     @_screenSaverProxy = new ScreenSaver.ScreenSaverProxy()
     return
 

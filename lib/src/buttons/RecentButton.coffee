@@ -1,11 +1,11 @@
 class RecentButton
-  __proto__: base = PopupMenu.PopupBaseMenuItem.prototype
+  __proto__: PopupMenu.PopupBaseMenuItem.prototype
   
   constructor:(appsMenuButton, file) ->
     @_init(appsMenuButton, file)
     
   _init:(appsMenuButton, file) ->
-    base._init.call(this, hover: false)
+    PopupMenu.PopupBaseMenuItem.prototype._init.call(this, hover: false)
     @file = file
     @appsMenuButton = appsMenuButton
     @button_name = @file.name

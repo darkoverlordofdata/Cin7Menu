@@ -1,11 +1,11 @@
 class PlaceCategoryButton
-  __proto__: base = PopupMenu.PopupBaseMenuItem.prototype
+  __proto__: PopupMenu.PopupBaseMenuItem.prototype
 
   constructor:(app) ->
     @_init(app)
     
   _init:(category) ->
-    base._init.call(this, hover: false)
+    PopupMenu.PopupBaseMenuItem.prototype._init.call(this, hover: false)
     @actor.set_style_class_name('menu-category-button')
     @actor._delegate = this
     @label = new St.Label(text: _("Places"), style_class: 'menu-category-button-label')

@@ -1,11 +1,11 @@
 class RecentClearButton
-  __proto__: base = PopupMenu.PopupBaseMenuItem.prototype
+  __proto__: PopupMenu.PopupBaseMenuItem.prototype
   
   constructor:(appsMenuButton) ->
     @_init(appsMenuButton)
     
   _init:(appsMenuButton) ->
-    base._init.call(this, hover: false)
+    PopupMenu.PopupBaseMenuItem.prototype._init.call(this, hover: false)
     @appsMenuButton = appsMenuButton
     @actor.set_style_class_name('menu-application-button')
     @button_name = _("Clear list")

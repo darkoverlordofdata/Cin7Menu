@@ -1,5 +1,5 @@
 class TransientButton
-  __proto__: base = AppPopupSubMenuMenuItem.prototype
+  __proto__: AppPopupSubMenuMenuItem.prototype
   
   constructor:(appsMenuButton, pathOrCommand) ->
     @_init(appsMenuButton, pathOrCommand)
@@ -22,7 +22,7 @@ class TransientButton
     @pathOrCommand = pathOrCommand
 
     @appsMenuButton = appsMenuButton
-    base._init.call(this, hover: false)
+    AppPopupSubMenuMenuItem.prototype._init.call(this, hover: false)
 
     # We need this fake app to help appEnterEvent/appLeaveEvent
     # work with our search result.

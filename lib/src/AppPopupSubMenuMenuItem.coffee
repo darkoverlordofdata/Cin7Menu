@@ -1,11 +1,11 @@
 class AppPopupSubMenuMenuItem
-  __proto__: base = PopupMenu.PopupBaseMenuItem.prototype
+  __proto__: PopupMenu.PopupBaseMenuItem.prototype
 
-  constructor(text, hide_expander) ->
-    @_init(text, hide_expander)
+  constructor:(args...) ->
+    @_init(args...)
 
   _init:(text, hide_expander) ->
-    base._init.call(this)
+    PopupMenu.PopupBaseMenuItem.prototype._init.call(this)
 
     @actor.add_style_class_name('popup-submenu-menu-item')
 
@@ -36,7 +36,7 @@ class AppPopupSubMenuMenuItem
 
   destroy:() ->
     @menu.destroy()
-    PopupBaseMenuItem.prototype.destroy.call(this)
+    PopupMenu.PopupBaseMenuItem.prototype.destroy.call(this)
 
   _onKeyPressEvent:(actor, event) ->
     symbol = event.get_key_symbol()

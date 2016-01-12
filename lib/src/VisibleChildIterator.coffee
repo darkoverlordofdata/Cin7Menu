@@ -15,9 +15,6 @@
 class VisibleChildIterator
   
   constructor:(parent, container) ->
-    @_init(parent, container)
-
-  _init:(parent, container) ->
     @container = container
     @_parent = parent
     @_num_children = 0

@@ -1,11 +1,11 @@
 class AllProgramsItem
-  __proto__: base = AppPopupSubMenuMenuItem.prototype
+  __proto__: AppPopupSubMenuMenuItem.prototype
 
   constructor:(label, icon, parent) ->
     @_init(label, icon, parent)
 
-  _init(label, icon, parent) ->
-    base._init.call(this, label)
+  _init:(label, icon, parent) ->
+    AppPopupSubMenuMenuItem.prototype._init.call(this, label)
 
     @actor.set_style_class_name('')
     @box = new St.BoxLayout(style_class: 'menu-category-button')
