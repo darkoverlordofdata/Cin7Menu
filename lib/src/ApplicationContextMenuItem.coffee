@@ -1,11 +1,11 @@
 class ApplicationContextMenuItem
-  __proto__: PopupMenu.PopupBaseMenuItem.prototype
+  __proto__: PopupMenu.PopupBaseMenuItem::
 
   constructor:(appButton, label, action) ->
     @_init(appButton, label, action)
 
   _init:(appButton, label, action) ->
-    PopupMenu.PopupBaseMenuItem.prototype._init.call(this, focusOnHover: false)
+    PopupMenu.PopupBaseMenuItem::_init.call(this, focusOnHover: false)
 
     @_appButton = appButton
     @_action = action

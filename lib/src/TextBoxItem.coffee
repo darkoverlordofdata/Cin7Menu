@@ -1,5 +1,5 @@
 class TextBoxItem
-  __proto__: AppPopupSubMenuMenuItem.prototype
+  __proto__: AppPopupSubMenuMenuItem::
   
   constructor:(label, icon, func, parent, hoverIcon) ->
     @_init(label, icon, func, parent, hoverIcon)
@@ -10,7 +10,7 @@ class TextBoxItem
     @icon = icon
     @func = func
     @active = false
-    AppPopupSubMenuMenuItem.prototype._init.call(this, label)
+    AppPopupSubMenuMenuItem::_init.call(this, label)
 
     @actor.set_style_class_name('menu-category-button')
     @actor.add_style_class_name('menu-text-item-button')

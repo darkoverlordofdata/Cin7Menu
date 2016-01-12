@@ -1,11 +1,11 @@
-class MyApplet
-  __proto__: Applet.TextIconApplet.prototype
+class MenuApplet
+  __proto__: Applet.TextIconApplet::
 
   constructor:(orientation, panel_height, instance_id) ->
-    @_init(orientation, panel_height, instance_id)
+    #@_init(orientation, panel_height, instance_id)
 
-  _init:(orientation, panel_height, instance_id) ->
-    Applet.TextIconApplet.prototype._init.call(this, orientation, panel_height, instance_id)
+    #_init:(orientation, panel_height, instance_id) ->
+    Applet.TextIconApplet::_init.call(this, orientation, panel_height, instance_id)
     try
       @set_applet_tooltip(_("Menu"))
 

@@ -17,5 +17,6 @@ Status: just started wip
 $ git clone git@github.com:darkoverlordofdata/Cin7Menu.git
 $ cd Cin7Menu
 $ npm install
+$ tools/configure
 $ npm run build
 $ mv ./Cin7Menu@darkoverlordofdata.com ~./local/share/cinnamon/applets

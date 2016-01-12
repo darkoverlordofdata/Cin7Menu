@@ -1,5 +1,5 @@
 class ShutdownMenu
-  __proto__: AppPopupSubMenuMenuItem.prototype
+  __proto__: AppPopupSubMenuMenuItem::
   
   constructor:(parent, hoverIcon) ->
     @_init(parent, hoverIcon)
@@ -8,7 +8,7 @@ class ShutdownMenu
     label = ''
     @hoverIcon = hoverIcon
     @parent = parent
-    AppPopupSubMenuMenuItem.prototype._init.call(this, label)
+    AppPopupSubMenuMenuItem::_init.call(this, label)
     @actor.set_style_class_name('menu-category-button')
     #@removeActor(@label)
     @label.destroy()
