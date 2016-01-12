@@ -1,0 +1,32 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/bruce/.nvm/v0.10.38/bin/node',
+1 verbose cli   '/home/bruce/.nvm/v0.10.38/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'build' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.38
+4 verbose run-script [ 'prebuild', 'build', 'postbuild' ]
+5 info prebuild Cin7Menu@0.0.1
+6 verbose unsafe-perm in lifecycle true
+7 info build Cin7Menu@0.0.1
+8 verbose unsafe-perm in lifecycle true
+9 info postbuild Cin7Menu@0.0.1
+10 verbose unsafe-perm in lifecycle true
+11 info Cin7Menu@0.0.1 Failed to exec postbuild script
+12 error Cin7Menu@0.0.1 postbuild: `mv -f ./Cin7Menu@darkoverlordofdata.com/applet.js ~./local/share/cinnamon/applets/applet.js`
+12 error Exit status 1
+13 error Failed at the Cin7Menu@0.0.1 postbuild script.
+13 error This is most likely a problem with the Cin7Menu package,
+13 error not with npm itself.
+13 error Tell the author that this fails on your system:
+13 error     mv -f ./Cin7Menu@darkoverlordofdata.com/applet.js ~./local/share/cinnamon/applets/applet.js
+13 error You can get their info via:
+13 error     npm owner ls Cin7Menu
+13 error There is likely additional logging output above.
+14 error System Linux 3.13.0-24-generic
+15 error command "/home/bruce/.nvm/v0.10.38/bin/node" "/home/bruce/.nvm/v0.10.38/bin/npm" "run" "build"
+16 error cwd /home/bruce/Git/Cin7Menu
+17 error node -v v0.10.38
+18 error npm -v 1.4.28
+19 error code ELIFECYCLE
+20 verbose exit [ 1, true ]

@@ -5,10 +5,9 @@
   
   Windows7 Style menu for Cinnamon
  */
-var APPLICATION_ICON_SIZE, AccountsService, AllProgramsItem, AppFavorites, AppPopupSubMenuMenuItem, Applet, ApplicationButton, ApplicationContextMenuItem, CATEGORY_ICON_SIZE, CMenu, CategoriesApplicationsBox, CategoryButton, Cinnamon, Clutter, DND, DocInfo, FavoritesBox, FavoritesButton, FileUtils, GLib, GenericApplicationButton, Gettext, Gio, GnomeSession, Gtk, HOVER_ICON_SIZE, HoverIcon, ICON_SIZE, Lang, MAX_FAV_ICON_SIZE, MAX_RECENT_FILES, Main, Mainloop, MenuApplet, Meta, Pango, PlaceButton, PlaceCategoryButton, PopupMenu, RecentButton, RecentCategoryButton, RecentClearButton, RightButtonsBox, ScreenSaver, Session, Settings, ShutdownContextMenuItem, ShutdownMenu, Signals, St, TestApplet, TextBoxItem, TransientButton, Tweener, USER_DESKTOP_PATH, Util, VisibleChildIterator, _, appsys, main,
+var APPLICATION_ICON_SIZE, AccountsService, AllProgramsItem, AppFavorites, AppPopupSubMenuMenuItem, Applet, ApplicationButton, ApplicationContextMenuItem, CATEGORY_ICON_SIZE, CMenu, CategoriesApplicationsBox, CategoryButton, Cinnamon, Clutter, DND, DocInfo, FavoritesBox, FavoritesButton, FileUtils, GLib, GenericApplicationButton, Gio, GnomeSession, Gtk, HOVER_ICON_SIZE, HoverIcon, ICON_SIZE, Lang, MAX_FAV_ICON_SIZE, MAX_RECENT_FILES, Main, Mainloop, MenuApplet, Meta, Pango, PlaceButton, PlaceCategoryButton, PopupMenu, RecentButton, RecentCategoryButton, RecentClearButton, RightButtonsBox, ScreenSaver, Session, Settings, ShutdownContextMenuItem, ShutdownMenu, Signals, St, TextBoxItem, TransientButton, Tweener, USER_DESKTOP_PATH, Util, VisibleChildIterator, appsys, main,
   slice = [].slice,
-  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
-  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 Applet = imports.ui.applet;
 
@@ -2904,48 +2903,6 @@ MenuApplet = (function() {
   };
 
   return MenuApplet;
-
-})();
-
-Applet = imports.ui.applet;
-
-GLib = imports.gi.GLib;
-
-Util = imports.misc.util;
-
-Gettext = imports.gettext.domain('cinnamon-applets');
-
-_ = Gettext.gettext;
-
-TestApplet = (function() {
-  var base;
-
-  TestApplet.prototype.__proto__ = base = Applet.IconApplet.prototype;
-
-  TestApplet.prototype.name = 'Gracie';
-
-  function TestApplet(orientation) {
-    this.on_applet_clicked = bind(this.on_applet_clicked, this);
-    var e, error;
-    base._init.call(this, orientation);
-    try {
-      this.set_applet_icon_name("gnome-info");
-      this.set_applet_tooltip(_("Say Hello, " + this.name));
-      return;
-    } catch (error) {
-      e = error;
-      global.logError(e);
-      return;
-    }
-  }
-
-  TestApplet.prototype.on_applet_clicked = function(evtdata) {
-    var notification;
-    notification = "notify-send \"Hello " + this.name + "\"  -a TEST -t 10 -u low";
-    Util.spawnCommandLine(notification);
-  };
-
-  return TestApplet;
 
 })();
 

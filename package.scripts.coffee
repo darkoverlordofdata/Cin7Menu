@@ -55,3 +55,6 @@ module.exports = (project, options = {}) ->
     npm run clean -s
   """
 
+  postbuild: """
+    cp -f ./Cin7Menu@darkoverlordofdata.com/applet.js ~/.local/share/cinnamon/applets/Cin7Menu@darkoverlordofdata.com/applet.js
+  """

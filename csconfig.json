@@ -23,7 +23,6 @@
         "lib/src/RightButtonsBox.coffee",
         "lib/src/FavoritesBox.coffee",
         "lib/src/MenuApplet.coffee",
-        "lib/TestApplet.coffee",
         "lib/Main.coffee"
     ]
 	

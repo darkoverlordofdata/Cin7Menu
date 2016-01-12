@@ -7,9 +7,10 @@
     "build": []
   },
   "scripts": {
-    "build": "cat lib/src/prolog.coffee LF lib/src/VisibleChildIterator.coffee LF lib/src/ApplicationContextMenuItem.coffee LF lib/src/AppPopupSubMenuMenuItem.coffee LF lib/src/buttons/GenericApplicationButton.coffee LF lib/src/buttons/TransientButton.coffee LF lib/src/buttons/ApplicationButton.coffee LF lib/src/buttons/PlaceButton.coffee LF lib/src/buttons/RecentButton.coffee LF lib/src/buttons/RecentClearButton.coffee LF lib/src/buttons/CategoryButton.coffee LF lib/src/buttons/PlaceCategoryButton.coffee LF lib/src/buttons/RecentCategoryButton.coffee LF lib/src/buttons/FavoritesButton.coffee LF lib/src/TextBoxItem.coffee LF lib/src/AllProgramsItem.coffee LF lib/src/HoverIcon.coffee LF lib/src/ShutdownContextMenuItem.coffee LF lib/src/ShutdownMenu.coffee LF lib/src/CategoriesApplicationsBox.coffee LF lib/src/RightButtonsBox.coffee LF lib/src/FavoritesBox.coffee LF lib/src/MenuApplet.coffee LF lib/TestApplet.coffee LF lib/Main.coffee | coffee -cbs > Cin7Menu@darkoverlordofdata.com/applet.js",
+    "build": "cat lib/src/prolog.coffee LF lib/src/VisibleChildIterator.coffee LF lib/src/ApplicationContextMenuItem.coffee LF lib/src/AppPopupSubMenuMenuItem.coffee LF lib/src/buttons/GenericApplicationButton.coffee LF lib/src/buttons/TransientButton.coffee LF lib/src/buttons/ApplicationButton.coffee LF lib/src/buttons/PlaceButton.coffee LF lib/src/buttons/RecentButton.coffee LF lib/src/buttons/RecentClearButton.coffee LF lib/src/buttons/CategoryButton.coffee LF lib/src/buttons/PlaceCategoryButton.coffee LF lib/src/buttons/RecentCategoryButton.coffee LF lib/src/buttons/FavoritesButton.coffee LF lib/src/TextBoxItem.coffee LF lib/src/AllProgramsItem.coffee LF lib/src/HoverIcon.coffee LF lib/src/ShutdownContextMenuItem.coffee LF lib/src/ShutdownMenu.coffee LF lib/src/CategoriesApplicationsBox.coffee LF lib/src/RightButtonsBox.coffee LF lib/src/FavoritesBox.coffee LF lib/src/MenuApplet.coffee LF lib/Main.coffee | coffee -cbs > Cin7Menu@darkoverlordofdata.com/applet.js",
     "clean": "rm -rf build/*",
-    "prebuild": "npm run clean -s"
+    "prebuild": "npm run clean -s",
+    "postbuild": "cp -f ./Cin7Menu@darkoverlordofdata.com/applet.js ~/.local/share/cinnamon/applets/Cin7Menu@darkoverlordofdata.com/applet.js"
   },
   "author": "darkoverlordofdata@gmail.com",
   "license": "MIT",
