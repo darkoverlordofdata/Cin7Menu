@@ -12,13 +12,13 @@ class RightButtonsBox
     @addItems()
     @_container = new Cinnamon.GenericContainer()
     @actor.add_actor @_container
-    @_container.connect "get-preferred-height", Lang.bind(this, @_getPreferredHeight)
-    @_container.connect "get-preferred-width", Lang.bind(this, @_getPreferredWidth)
-    @_container.connect "allocate", Lang.bind(this, @_allocate)
+    @_container.connect "get-preferred-height", @_getPreferredHeight
+    @_container.connect "get-preferred-width", @_getPreferredWidth
+    @_container.connect "allocate", @_allocate
     @_container.add_actor @itemsBox
     return
 
-  _update_quicklinks: (quicklinkOptions) ->
+  _update_quicklinks: (quicklinkOptions) =>
     for i of @quicklinks
       @quicklinks[i]._update quicklinkOptions
     @shutdown._update quicklinkOptions
@@ -41,7 +41,7 @@ class RightButtonsBox
       @shutdownBox.add_actor @shutdownMenu.actor
     return
 
-  addItems: ->
+  addItems: =>
     @itemsBox.destroy_all_children()
     @shutdownBox.destroy_all_children()
     @hoverIcon = new HoverIcon(@menu)
@@ -79,7 +79,7 @@ class RightButtonsBox
     @itemsBox.add_actor @shutDownIconBox
     return
 
-  _getPreferredHeight: (actor, forWidth, alloc) ->
+  _getPreferredHeight: (actor, forWidth, alloc) =>
     t = @itemsBox.get_preferred_height(forWidth)
     minSize = t[0]
     naturalSize = t[1]
@@ -87,7 +87,7 @@ class RightButtonsBox
     alloc.natural_size = naturalSize
     return
 
-  _getPreferredWidth: (actor, forHeight, alloc) ->
+  _getPreferredWidth: (actor, forHeight, alloc) =>
     t = @itemsBox.get_preferred_width(forHeight)
     minSize = t[0]
     naturalSize = t[1]
@@ -95,7 +95,7 @@ class RightButtonsBox
     alloc.natural_size = naturalSize
     return
 
-  _allocate: (actor, box, flags) ->
+  _allocate: (actor, box, flags) =>
     childBox = new Clutter.ActorBox()
     t = @itemsBox.get_preferred_size()
     minWidth = t[0]

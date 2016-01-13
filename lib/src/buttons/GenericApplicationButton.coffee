@@ -14,26 +14,26 @@ class GenericApplicationButton
     if @withMenu
       @menu = new PopupMenu.PopupSubMenu(@actor)
       @menu.actor.set_style_class_name "menu-context-menu"
-      @menu.connect "open-state-changed", Lang.bind(this, @_subMenuOpenStateChanged)
+      @menu.connect "open-state-changed", @_subMenuOpenStateChanged
     return
 
-  _onButtonReleaseEvent: (actor, event) ->
+  _onButtonReleaseEvent: (actor, event) =>
     @activate event  if event.get_button() is 1
     if event.get_button() is 3
       @appsMenuButton.closeApplicationsContextMenus @app, true  if @withMenu and not @menu.isOpen
       @toggleMenu()
     true
 
-  activate: (event) ->
+  activate: (event) =>
     @app.open_new_window -1
     @appsMenuButton.menu.close()
     return
 
-  closeMenu: ->
+  closeMenu: =>
     @menu.close()  if @withMenu
     return
 
-  toggleMenu: ->
+  toggleMenu: =>
     return  unless @withMenu
     unless @menu.isOpen
       children = @menu.box.get_children()
@@ -54,6 +54,6 @@ class GenericApplicationButton
     @menu.toggle()
     return
 
-  _subMenuOpenStateChanged: ->
+  _subMenuOpenStateChanged: =>
     @appsMenuButton._scrollToButton @menu  if @menu.isOpen
     return

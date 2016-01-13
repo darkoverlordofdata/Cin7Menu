@@ -23,13 +23,13 @@ class RecentButton
     @addActor @label
     return
 
-  _onButtonReleaseEvent: (actor, event) ->
+  _onButtonReleaseEvent: (actor, event) =>
     if event.get_button() is 1
       Gio.app_info_launch_default_for_uri @file.uri, global.create_app_launch_context()
       @appsMenuButton.menu.close()
     return
 
-  activate: (event) ->
+  activate: (event) =>
     Gio.app_info_launch_default_for_uri @file.uri, global.create_app_launch_context()
     @appsMenuButton.menu.close()
     return

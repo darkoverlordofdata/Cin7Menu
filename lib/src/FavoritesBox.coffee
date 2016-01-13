@@ -8,14 +8,14 @@ class FavoritesBox
     @_animatingPlaceholdersCount = 0
     return
 
-  _clearDragPlaceholder: ->
+  _clearDragPlaceholder: =>
     if @_dragPlaceholder
       @_dragPlaceholder.animateOutAndDestroy()
       @_dragPlaceholder = null
       @_dragPlaceholderPos = -1
     return
 
-  handleDragOver: (source, actor, x, y, time) ->
+  handleDragOver: (source, actor, x, y, time) =>
     app = source.app
     
     # Don't allow favoriting of transient apps
@@ -36,7 +36,7 @@ class FavoritesBox
     pos = Math.round(y * numFavorites / boxHeight)
     if pos isnt @_dragPlaceholderPos and pos <= numFavorites
       if @_animatingPlaceholdersCount > 0
-        appChildren = children.filter((actor) ->
+        appChildren = children.filter((actor) =>
           actor._delegate instanceof FavoritesButton
         )
         @_dragPlaceholderPos = children.indexOf(appChildren[pos])
@@ -48,10 +48,10 @@ class FavoritesBox
         if @_dragPlaceholder
           @_dragPlaceholder.animateOutAndDestroy()
           @_animatingPlaceholdersCount++
-          @_dragPlaceholder.actor.connect "destroy", Lang.bind(this, ->
+          @_dragPlaceholder.actor.connect "destroy", =>
             @_animatingPlaceholdersCount--
             return
-          )
+          
         @_dragPlaceholder = null
         return DND.DragMotionResult.CONTINUE
       
@@ -75,7 +75,7 @@ class FavoritesBox
 
   
   # Draggable target interface
-  acceptDrop: (source, actor, x, y, time) ->
+  acceptDrop: (source, actor, x, y, time) =>
     app = source.app
     
     # Don't allow favoriting of transient apps
@@ -94,12 +94,12 @@ class FavoritesBox
       continue  if childId is id
       favPos++  if childId of favorites
       i++
-    Meta.later_add Meta.LaterType.BEFORE_REDRAW, Lang.bind(this, ->
+    Meta.later_add Meta.LaterType.BEFORE_REDRAW, =>
       appFavorites = AppFavorites.getAppFavorites()
       if srcIsFavorite
         appFavorites.moveFavoriteToPos id, favPos
       else
         appFavorites.addFavoriteAtPos id, favPos
       false
-    )
+    
     true

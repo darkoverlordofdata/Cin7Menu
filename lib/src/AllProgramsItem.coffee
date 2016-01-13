@@ -24,18 +24,18 @@ class AllProgramsItem extends AppPopupSubMenuMenuItem
     @addActor @box
     return
 
-  setActive: (active) ->
+  setActive: (active) =>
     if active
       @box.set_style_class_name "menu-category-button-selected"
     else
       @box.set_style_class_name "menu-category-button"
     return
 
-  _onButtonReleaseEvent: (actor, event) ->
+  _onButtonReleaseEvent: (actor, event) =>
     @activate event  if event.get_button() is 1
     return
 
-  activate: (event) ->
+  activate: (event) =>
     if @parent.leftPane.get_child() is @parent.favsBox
       @parent.switchPanes "apps"
     else

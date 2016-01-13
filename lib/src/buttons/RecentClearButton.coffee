@@ -25,7 +25,7 @@ class RecentClearButton
     @addActor @label
     return
 
-  _onButtonReleaseEvent: (actor, event) ->
+  _onButtonReleaseEvent: (actor, event) =>
     if event.get_button() is 1
       @appsMenuButton.menu.close()
       GtkRecent = new Gtk.RecentManager()

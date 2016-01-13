@@ -14,7 +14,7 @@ class ApplicationContextMenuItem
     @addActor @label
     return
 
-  activate: (event) ->
+  activate: (event) =>
     switch @_action
       when "add_to_panel"
         winListApplet = false

@@ -26,7 +26,7 @@ class ShutdownMenu extends AppPopupSubMenuMenuItem
     @menu.addMenuItem menuItem
     return
 
-  setActive: (active) ->
+  setActive: (active) =>
     if active
       @actor.set_style_class_name "menu-category-button-selected"
       @hoverIcon._refresh "system-log-out"
@@ -34,6 +34,6 @@ class ShutdownMenu extends AppPopupSubMenuMenuItem
       @actor.set_style_class_name "menu-category-button"
     return
 
-  _onButtonReleaseEvent: (actor, event) ->
+  _onButtonReleaseEvent: (actor, event) =>
     @menu.toggle()  if event.get_button() is 1
     return

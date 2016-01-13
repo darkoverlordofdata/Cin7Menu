@@ -25,16 +25,16 @@ class TransientButton
     # work with our search result.
     @app =
       get_app_info:
-        get_filename: ->
+        get_filename: =>
           pathOrCommand
 
-      get_id: ->
+      get_id: =>
         -1
 
-      get_description: ->
+      get_description: =>
         @pathOrCommand
 
-      get_name: ->
+      get_name: =>
         ""
 
     iconBox = new St.Bin()
@@ -71,11 +71,11 @@ class TransientButton
     @isDraggableApp = false
     return
 
-  _onButtonReleaseEvent: (actor, event) ->
+  _onButtonReleaseEvent: (actor, event) =>
     @activate event  if event.get_button() is 1
     true
 
-  activate: (event) ->
+  activate: (event) =>
     if @handler?
       @handler.launch [@file], null
     else

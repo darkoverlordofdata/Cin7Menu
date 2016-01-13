@@ -22,13 +22,13 @@ class PlaceButton
     @addActor @label
     return
 
-  _onButtonReleaseEvent: (actor, event) ->
+  _onButtonReleaseEvent: (actor, event) =>
     if event.get_button() is 1
       @place.launch()
       @appsMenuButton.menu.close()
     return
 
-  activate: (event) ->
+  activate: (event) =>
     @place.launch()
     @appsMenuButton.menu.close()
     return

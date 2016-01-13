@@ -19,7 +19,7 @@ class VisibleChildIterator
     @reloadVisible()
     return
 
-  reloadVisible: ->
+  reloadVisible: =>
     @visible_children = new Array()
     @abs_index = new Array()
     children = @container.get_children()
@@ -34,26 +34,26 @@ class VisibleChildIterator
     @_num_children = @visible_children.length
     return
 
-  getNextVisible: (cur_child) ->
+  getNextVisible: (cur_child) =>
     if @visible_children.indexOf(cur_child) is @_num_children - 1
       cur_child
     else
       @visible_children[@visible_children.indexOf(cur_child) + 1]
 
-  getPrevVisible: (cur_child) ->
+  getPrevVisible: (cur_child) =>
     if @visible_children.indexOf(cur_child) is 0
       cur_child
     else
       @visible_children[@visible_children.indexOf(cur_child) - 1]
 
-  getFirstVisible: ->
+  getFirstVisible: =>
     @visible_children[0]
 
-  getLastVisible: ->
+  getLastVisible: =>
     @visible_children[@_num_children - 1]
 
-  getNumVisibleChildren: ->
+  getNumVisibleChildren: =>
     @_num_children
 
-  getAbsoluteIndexOfChild: (child) ->
+  getAbsoluteIndexOfChild: (child) =>
     @abs_index[@visible_children.indexOf(child)]

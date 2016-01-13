@@ -6,7 +6,7 @@ class TextBoxItem extends AppPopupSubMenuMenuItem
     super label
     @actor.set_style_class_name "menu-category-button"
     @actor.add_style_class_name "menu-text-item-button"
-    @actor.connect "leave-event", Lang.bind(this, @_onLeaveEvent)
+    @actor.connect "leave-event", @_onLeaveEvent
     
     #this.removeActor(this.label);
     @label.destroy()
@@ -28,7 +28,7 @@ class TextBoxItem extends AppPopupSubMenuMenuItem
     @addActor @label
     return
 
-  _update: (quicklinkOptions) ->
+  _update: (quicklinkOptions) =>
     @removeActor @label_icon
     @removeActor @label
     if quicklinkOptions is "both" or quicklinkOptions is "icons"
@@ -56,17 +56,17 @@ class TextBoxItem extends AppPopupSubMenuMenuItem
       @addActor @label
     return
 
-  _onLeaveEvent: ->
+  _onLeaveEvent: =>
     @hoverIcon.showUser = true
     Tweener.addTween this,
       time: 1
-      onComplete: ->
+      onComplete: =>
         @hoverIcon._onUserChanged()  unless @active
         return
 
     return
 
-  setActive: (active) ->
+  setActive: (active) =>
     if active
       @hoverIcon.showUser = false
       @actor.set_style_class_name "menu-category-button-selected"
@@ -75,11 +75,11 @@ class TextBoxItem extends AppPopupSubMenuMenuItem
       @actor.set_style_class_name "menu-category-button"
     return
 
-  _onButtonReleaseEvent: (actor, event) ->
+  _onButtonReleaseEvent: (actor, event) =>
     @activate event  if event.get_button() is 1
     return
 
-  activate: (event) ->
+  activate: (event) =>
     eval @func
     @parent.close()
     return

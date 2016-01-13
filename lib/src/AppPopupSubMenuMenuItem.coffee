@@ -47,19 +47,19 @@ class AppPopupSubMenuMenuItem
       align: St.Align.START
 
     @menu = new PopupMenu.PopupSubMenu(@actor, @_triangle)
-    @menu.connect "open-state-changed", Lang.bind(this, @_subMenuOpenStateChanged)
+    @menu.connect "open-state-changed", @_subMenuOpenStateChanged
     return
 
-  _subMenuOpenStateChanged: (menu, open) ->
+  _subMenuOpenStateChanged: (menu, open) =>
     @actor.change_style_pseudo_class "open", open
     return
 
-  destroy: ->
+  destroy: =>
     @menu.destroy()
     PopupBaseMenuItem::destroy.call this
     return
 
-  _onKeyPressEvent: (actor, event) ->
+  _onKeyPressEvent: (actor, event) =>
     symbol = event.get_key_symbol()
     if symbol is Clutter.KEY_Right
       @menu.open true
@@ -70,10 +70,10 @@ class AppPopupSubMenuMenuItem
       return true
     PopupMenu.PopupBaseMenuItem::_onKeyPressEvent.call this, actor, event
 
-  activate: (event) ->
+  activate: (event) =>
     @menu.open true
     return
 
-  _onButtonReleaseEvent: (actor) ->
+  _onButtonReleaseEvent: (actor) =>
     @menu.toggle()
     return

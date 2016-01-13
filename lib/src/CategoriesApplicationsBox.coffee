@@ -5,7 +5,7 @@ class CategoriesApplicationsBox
     @actor._delegate = this
     return
 
-  acceptDrop: (source, actor, x, y, time) ->
+  acceptDrop: (source, actor, x, y, time) =>
     if source instanceof FavoritesButton
       source.actor.destroy()
       actor.destroy()

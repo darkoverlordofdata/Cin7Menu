@@ -16,10 +16,10 @@ class ApplicationButton extends GenericApplicationButton
     @isDraggableApp = true
     return
 
-  get_app_id: ->
+  get_app_id: =>
     @app.get_id()
 
-  getDragActor: ->
+  getDragActor: =>
     favorites = AppFavorites.getAppFavorites().getFavorites()
     nbFavorites = favorites.length
     monitorHeight = Main.layoutManager.primaryMonitor.height
@@ -31,5 +31,5 @@ class ApplicationButton extends GenericApplicationButton
   
   # Returns the original actor that should align with the actor
   # we show as the item is being dragged.
-  getDragActorSource: ->
+  getDragActorSource: =>
     @actor

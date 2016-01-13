@@ -18,14 +18,14 @@ class FavoritesButton extends GenericApplicationButton
     @isDraggableApp = true
     return
 
-  get_app_id: ->
+  get_app_id: =>
     @app.get_id()
 
-  getDragActor: ->
+  getDragActor: =>
     new Clutter.Clone(source: @actor)
 
   
   # Returns the original actor that should align with the actor
   # we show as the item is being dragged.
-  getDragActorSource: ->
+  getDragActorSource: =>
     @actor

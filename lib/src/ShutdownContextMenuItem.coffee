@@ -5,7 +5,7 @@ class ShutdownContextMenuItem extends ApplicationContextMenuItem
     @_screenSaverProxy = new ScreenSaver.ScreenSaverProxy()
     return
 
-  activate: (event) ->
+  activate: (event) =>
     switch @_action
       when "logout"
         Session.LogoutRemote 0
