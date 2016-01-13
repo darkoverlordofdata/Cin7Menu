@@ -1,9 +1,3 @@
-###
-  Cin7Menu
-  
-  Windows7 Style menu for Cinnamon
-###
-
 Applet = imports.ui.applet
 Mainloop = imports.mainloop
 CMenu = imports.gi.CMenu
@@ -29,7 +23,6 @@ GLib = imports.gi.GLib
 AccountsService = imports.gi.AccountsService
 Settings = imports.ui.settings
 Pango = imports.gi.Pango
-
 Session = new GnomeSession.SessionManager()
 ICON_SIZE = 16
 MAX_FAV_ICON_SIZE = 64
@@ -37,8 +30,5 @@ CATEGORY_ICON_SIZE = 22
 APPLICATION_ICON_SIZE = 22
 HOVER_ICON_SIZE = 48
 MAX_RECENT_FILES = 20
-
 USER_DESKTOP_PATH = FileUtils.getUserDesktopDir()
-
-
 appsys = Cinnamon.AppSystem.get_default()

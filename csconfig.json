@@ -22,7 +22,7 @@
         "lib/src/CategoriesApplicationsBox.coffee",
         "lib/src/RightButtonsBox.coffee",
         "lib/src/FavoritesBox.coffee",
-        "lib/src/MenuApplet.coffee",
+        "lib/src/MyApplet.coffee",
         "lib/Main.coffee"
     ]
 	
