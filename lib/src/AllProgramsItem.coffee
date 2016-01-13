@@ -1,7 +1,7 @@
 class AllProgramsItem extends AppPopupSubMenuMenuItem
   
   constructor:(label, icon, parent) ->
-    @_init label
+    super label
     @actor.set_style_class_name ""
     @box = new St.BoxLayout(style_class: "menu-category-button")
     @parent = parent

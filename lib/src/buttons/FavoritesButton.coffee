@@ -1,15 +1,7 @@
-# FavoritesButton = (appsMenuButton, app, nbFavorites, iconSize) ->
-#   @_init appsMenuButton, app, nbFavorites, iconSize
-#   return
-# FavoritesButton:: =
-#   __proto__: GenericApplicationButton::
-#   _init: (appsMenuButton, app, nbFavorites, iconSize) ->
-  
 class FavoritesButton extends GenericApplicationButton
 
   constructor: (appsMenuButton, app, nbFavorites, iconSize) ->
-    #GenericApplicationButton::_init.call this, appsMenuButton, app, true
-    @_init appsMenuButton, app, true
+    super appsMenuButton, app, true
     monitorHeight = Main.layoutManager.primaryMonitor.height
     real_size = (0.7 * monitorHeight) / nbFavorites
     icon_size = iconSize #0.6*real_size;

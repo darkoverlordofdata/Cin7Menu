@@ -1,9 +1,9 @@
 class AppPopupSubMenuMenuItem
   __proto__: PopupMenu.PopupBaseMenuItem::
   
-  constructor: ->
-    @_init.apply this, arguments
-
+  constructor:(args...) ->
+    @_init args...
+  
   _init: (text, hide_expander) ->
     PopupMenu.PopupBaseMenuItem::_init.call this
     @actor.add_style_class_name "popup-submenu-menu-item"

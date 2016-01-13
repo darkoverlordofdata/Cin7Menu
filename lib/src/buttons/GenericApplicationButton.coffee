@@ -1,8 +1,8 @@
 class GenericApplicationButton
   __proto__: PopupMenu.PopupSubMenuMenuItem::
 
-  constructor: (appsMenuButton, app) ->
-    @_init appsMenuButton, app
+  constructor: (appsMenuButton, app, withMenu) ->
+    @_init appsMenuButton, app, withMenu
     
   _init: (appsMenuButton, app, withMenu) ->
     @app = app
