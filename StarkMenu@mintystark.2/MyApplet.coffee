@@ -1,7 +1,56 @@
-class MyApplet
-  __proto__: Applet.TextIconApplet::
+MyApplet = (orientation, panel_height, instance_id) ->
+  @_init orientation, panel_height, instance_id
+  return
 
-  constructor: (orientation, panel_height, instance_id) ->
+#
+#            global.display.connect('overlay-key', Lang.bind(this, function(){
+#                try{
+#                    this.menu.toggle();
+#                }
+#                catch(e) {
+#                    global.logError(e);
+#                }
+#            }));
+#	    
+
+# Jump from Categories to Appications
+
+# Jump from Appications to Categories
+
+# Need preload data before get completion. GFilenameCompleter load content of parent directory.
+# Parent directory for /usr/include/ is /usr/. So need to add fake name('a').
+
+#Remove all categories
+
+# Sort apps and add to applicationsBox
+
+# Now generate Places category and places buttons and add to the list
+
+# Now generate recent category and recent files buttons and add to the list
+
+#Remove all favorites
+
+#Load favorites again
+# + 3 because we're adding 3 system buttons at the bottom
+
+# _listApplications returns all the applications when the search
+# string is zero length. This will happend if you type a space
+# in the search entry.
+# search box autocompletion results
+
+# Don't use the pattern here, as filesystem is case sensitive
+
+# The exception from gjs contains an error string like:
+#     Error invoking Gio.app_info_launch_default_for_uri: No application
+#     is registered as handling this file
+# We are only interested in the part after the first colon.
+#var message = e.message.replace(/[^:]*: *(.+)/, '$1');
+main = (metadata, orientation, panel_height, instance_id) ->
+  myApplet = new MyApplet(orientation, panel_height, instance_id)
+  myApplet
+MyApplet:: =
+  __proto__: Applet.TextIconApplet::
+  _init: (orientation, panel_height, instance_id) ->
     Applet.TextIconApplet::_init.call this, orientation, panel_height, instance_id
     try
       @set_applet_tooltip _("Menu")
@@ -9,7 +58,7 @@ class MyApplet
       @menu = new Applet.AppletPopupMenu(this, orientation)
       @menuManager.addMenu @menu
       @actor.connect "key-press-event", Lang.bind(this, @_onSourceKeyPress)
-      @settings = new Settings.AppletSettings(this, "Cin7Menu@darkoverlordofdata.com", instance_id)
+      @settings = new Settings.AppletSettings(this, "StarkMenu@mintystark", instance_id)
       @settings.bindProperty Settings.BindingDirection.IN, "show-recent", "showRecent", @_refreshPlacesAndRecent, null
       @settings.bindProperty Settings.BindingDirection.IN, "show-places", "showPlaces", @_refreshPlacesAndRecent, null
       @settings.bindProperty Settings.BindingDirection.IN, "activate-on-hover", "activateOnHover", @_updateActivateOnHover, null
@@ -47,7 +96,7 @@ class MyApplet
       @menuIsOpening = false
       @RecentManager = new DocInfo.DocManager()
       @_display()
-      @menu.connect "open-state-changed", @_onOpenStateChanged
+      @menu.connect "open-state-changed", Lang.bind(this, @_onOpenStateChanged)
       appsys.connect "installed-changed", Lang.bind(this, @_refreshApps)
       AppFavorites.getAppFavorites().connect "changed", Lang.bind(this, @_refreshFavs)
       @settings.bindProperty Settings.BindingDirection.IN, "hover-delay", "hover_delay_ms", @_update_hover_delay, null
@@ -163,7 +212,7 @@ class MyApplet
     @menu = new Applet.AppletPopupMenu(this, orientation)
     @menuManager.addMenu @menu
     @menu.actor.add_style_class_name "menu-background"
-    @menu.connect "open-state-changed", @_onOpenStateChanged
+    @menu.connect "open-state-changed", Lang.bind(this, @_onOpenStateChanged)
     @_display()
     @_updateQuickLinksShutdownView()
     @_updateQuickLinks()
@@ -192,7 +241,7 @@ class MyApplet
     else
       false
 
-  _onOpenStateChanged: (menu, open) =>
+  _onOpenStateChanged: (menu, open) ->
     if open
       @menuIsOpening = true
       @actor.add_style_pseudo_class "active"

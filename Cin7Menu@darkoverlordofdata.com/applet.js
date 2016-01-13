@@ -2,7 +2,8 @@
 var APPLICATION_ICON_SIZE, AccountsService, AllProgramsItem, AppFavorites, AppPopupSubMenuMenuItem, Applet, ApplicationButton, ApplicationContextMenuItem, CATEGORY_ICON_SIZE, CMenu, CategoriesApplicationsBox, CategoryButton, Cinnamon, Clutter, DND, DocInfo, FavoritesBox, FavoritesButton, FileUtils, GLib, GenericApplicationButton, Gio, GnomeSession, Gtk, HOVER_ICON_SIZE, HoverIcon, ICON_SIZE, Lang, MAX_FAV_ICON_SIZE, MAX_RECENT_FILES, Main, Mainloop, Meta, MyApplet, Pango, PlaceButton, PlaceCategoryButton, PopupMenu, RecentButton, RecentCategoryButton, RecentClearButton, RightButtonsBox, ScreenSaver, Session, Settings, ShutdownContextMenuItem, ShutdownMenu, Signals, St, TextBoxItem, TransientButton, Tweener, USER_DESKTOP_PATH, Util, VisibleChildIterator, appsys, main,
   slice = [].slice,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-  hasProp = {}.hasOwnProperty;
+  hasProp = {}.hasOwnProperty,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 Applet = imports.ui.applet;
 
@@ -1450,6 +1451,7 @@ MyApplet = (function() {
   MyApplet.prototype.__proto__ = Applet.TextIconApplet.prototype;
 
   function MyApplet(orientation, panel_height, instance_id) {
+    this._onOpenStateChanged = bind(this._onOpenStateChanged, this);
     var e, error;
     Applet.TextIconApplet.prototype._init.call(this, orientation, panel_height, instance_id);
     try {
@@ -1458,7 +1460,7 @@ MyApplet = (function() {
       this.menu = new Applet.AppletPopupMenu(this, orientation);
       this.menuManager.addMenu(this.menu);
       this.actor.connect("key-press-event", Lang.bind(this, this._onSourceKeyPress));
-      this.settings = new Settings.AppletSettings(this, "StarkMenu@mintystark", instance_id);
+      this.settings = new Settings.AppletSettings(this, "Cin7Menu@darkoverlordofdata.com", instance_id);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-recent", "showRecent", this._refreshPlacesAndRecent, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-places", "showPlaces", this._refreshPlacesAndRecent, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "activate-on-hover", "activateOnHover", this._updateActivateOnHover, null);
@@ -1496,7 +1498,7 @@ MyApplet = (function() {
       this.menuIsOpening = false;
       this.RecentManager = new DocInfo.DocManager();
       this._display();
-      this.menu.connect("open-state-changed", Lang.bind(this, this._onOpenStateChanged));
+      this.menu.connect("open-state-changed", this._onOpenStateChanged);
       appsys.connect("installed-changed", Lang.bind(this, this._refreshApps));
       AppFavorites.getAppFavorites().connect("changed", Lang.bind(this, this._refreshFavs));
       this.settings.bindProperty(Settings.BindingDirection.IN, "hover-delay", "hover_delay_ms", this._update_hover_delay, null);
@@ -1621,7 +1623,7 @@ MyApplet = (function() {
     this.menu = new Applet.AppletPopupMenu(this, orientation);
     this.menuManager.addMenu(this.menu);
     this.menu.actor.add_style_class_name("menu-background");
-    this.menu.connect("open-state-changed", Lang.bind(this, this._onOpenStateChanged));
+    this.menu.connect("open-state-changed", this._onOpenStateChanged);
     this._display();
     this._updateQuickLinksShutdownView();
     this._updateQuickLinks();
