@@ -1588,13 +1588,28 @@ MyApplet = (function() {
       this.menuManager.addMenu(this.menu);
       this.actor.connect("key-press-event", this._onSourceKeyPress);
       this.settings = new Settings.AppletSettings(this, "Cin7Menu@darkoverlordofdata.com", instance_id);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-computer", "showComputer", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-connnection", "showConnection", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-control-panel", "showSettings", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-default-programs", "showDefaults", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-devices", "showDevices", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-documents", "showDocuments", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-downloads", "showDownloads", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-favorites", "showFavorites", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-games", "showGames", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-help", "showHelp", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-homegroup", "showHomegroup", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-music", "showMusic", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-network", "showNetwork", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-personal", "showPersonal", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-pictures", "showPictures", this._updateQuickLinks, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-recent", "showRecent", this._refreshPlacesAndRecent, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-run", "showRun", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-videos", "showVideos", this._updateQuickLinks, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-places", "showPlaces", this._refreshPlacesAndRecent, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "activate-on-hover", "activateOnHover", this._updateActivateOnHover, null);
       this._updateActivateOnHover();
       this.menu.actor.add_style_class_name("menu-background");
-      this.settings.bindProperty(Settings.BindingDirection.IN, "menu-icon", "menuIcon", this._updateIconAndLabel, null);
-      this.settings.bindProperty(Settings.BindingDirection.IN, "menu-label", "menuLabel", this._updateIconAndLabel, null);
       this._updateIconAndLabel();
       this._searchInactiveIcon = new St.Icon({
         style_class: "menu-search-entry-icon",
@@ -1690,7 +1705,38 @@ MyApplet = (function() {
   };
 
   MyApplet.prototype._updateQuickLinks = function() {
-    this.menu.quicklinks = ["separator", "Home,folder-home,nemo", "Documents,folder-documents,nemo Documents", "Pictures,folder-pictures,nemo Pictures", "Music,folder-music,nemo Music", "Downloads,folder-downloads,nemo Downloads", "separator", "Computer,computer,nemo computer:///", "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info", "System Settings,control-center2,cinnamon-settings", "Software Manager,package-manager,gksu mintinstall", "Terminal,terminal,gnome-terminal", "Help,help,yelp", "separator", "", "", "", "", "", ""];
+    this.menu.quicklinks = ["separator", "Home,folder-home,nemo"];
+    if (this.showDocuments === "link") {
+      this.menu.quicklinks.push("Documents,folder-documents,nemo Documents");
+    }
+    if (this.showPictures === "link") {
+      this.menu.quicklinks.push("Pictures,folder-pictures,nemo Pictures");
+    }
+    if (this.showMusic === "link") {
+      this.menu.quicklinks.push("Music,folder-music,nemo Music");
+    }
+    if (this.showVideos === "link") {
+      this.menu.quicklinks.push("Videos,folder-videos,nemo Videos");
+    }
+    if (this.showDownloads === "link") {
+      this.menu.quicklinks.push("Downloads,folder-downloads,nemo Downloads");
+    }
+    this.menu.quicklinks.push("separator");
+    if (this.showComputer === "link") {
+      this.menu.quicklinks.push("Computer,computer,nemo computer:///");
+    }
+    this.menu.quicklinks.push("System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info");
+    if (this.showSettings === "link") {
+      this.menu.quicklinks.push("System Settings,control-center2,cinnamon-settings");
+    }
+    if (this.showRun) {
+      this.menu.quicklinks.push("Software Manager,package-manager,gksu mintinstall");
+    }
+    this.menu.quicklinks.push("Terminal,terminal,gnome-terminal");
+    if (this.shoHelp === "link") {
+      this.menu.quicklinks.push("Help,help,yelp");
+    }
+    this.menu.quicklinks.push("separator");
     this.menu.quicklinkOptions = this.quicklinkOptions;
     this.rightButtonsBox.addItems();
     this.rightButtonsBox._update_quicklinks(this.quicklinkOptions);
@@ -1777,13 +1823,15 @@ MyApplet = (function() {
   };
 
   MyApplet.prototype._updateIconAndLabel = function() {
-    var e, error;
-    this.set_applet_label(this.menuLabel);
+    var e, error, menuIcon, menuLabel;
+    menuLabel = "";
+    menuIcon = ".local/share/cinnamon/applets/Cin7Menu@darkoverlordofdata.com/icon.png";
+    this.set_applet_label(menuLabel);
     try {
-      this.set_applet_icon_path(this.menuIcon);
+      this.set_applet_icon_path(menuIcon);
     } catch (error) {
       e = error;
-      global.logWarning("Could not load icon file \"" + this.menuIcon + "\" for menu button");
+      global.logWarning("Could not load icon file \"" + menuIcon + "\" for menu button");
     }
   };
 

@@ -7,10 +7,16 @@
          "Display as menu": "menu",
          "Don't display this item": "none"
      },
-    "description": "Show Computer",
+    "description": "Computer              ",
     "tooltip": "Explore My Computer."
  },
- "show-settings" : {
+ "show-connection" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Connection",
+    "tooltip": "Connect to a network"
+ }, 
+ "show-control-panel" : {
     "type": "combobox",
     "default": "link",
     "options": {
@@ -18,9 +24,21 @@
          "Display as menu": "menu",
          "Don't display this item": "none"
      },
-    "description": "Show Settings",
+    "description": "Control Panel        ",
     "tooltip": "Control Panel Settings."
  },
+ "show-default-programs" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Default programs",
+    "tooltip": "Set default programs to use"
+ }, 
+ "show-devices" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Devices & Printers",
+    "tooltip": "Devices and Printers"
+ }, 
  "show-documents" : {
     "type": "combobox",
     "default": "link",
@@ -29,41 +47,8 @@
          "Display as menu": "menu",
          "Don't display this item": "none"
      },
-    "description": "Show Documents",
+    "description": "Documents            ",
     "tooltip": "Explore My Documents"
- },
- "show-pictures" : {
-    "type": "combobox",
-    "default": "link",
-    "options": {
-         "Display as link": "link",
-         "Display as menu": "menu",
-         "Don't display this item": "none"
-     },
-    "description": "Show Pictures",
-    "tooltip": "Explore My Documents"
- },
- "show-music" : {
-    "type": "combobox",
-    "default": "link",
-    "options": {
-         "Display as link": "link",
-         "Display as menu": "menu",
-         "Don't display this item": "none"
-     },
-    "description": "Show Music",
-    "tooltip": "Explore My Music"
- },
- "show-videos" : {
-    "type": "combobox",
-    "default": "link",
-    "options": {
-         "Display as link": "link",
-         "Display as menu": "menu",
-         "Don't display this item": "none"
-     },
-    "description": "Show Videos",
-    "tooltip": "Explore My Videos"
  },
  "show-downloads" : {
     "type": "combobox",
@@ -73,21 +58,82 @@
          "Display as menu": "menu",
          "Don't display this item": "none"
      },
-    "description": "Show Downloads",
+    "description": "Downloads             ",
     "tooltip": "Explore My Downloads"
  },
- 
- "menu-icon" : {
-    "type" : "iconfilechooser",
-    "default" : ".local/share/cinnamon/applets/Cin7Menu@darkoverlordofdata.com/icon.png",
-    "description": "Icon",
-    "tooltip": "Select an icon to show in the panel."
+ "enable-context" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Enable context menu & drag n drop",
+    "tooltip": "Enable context menu"
+ }, 
+ "show-favorites" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Favorites           ",
+    "tooltip": "Show the favorites menu"
+ }, 
+ "show-games" : {
+    "type": "combobox",
+    "default": "link",
+    "options": {
+         "Display as link": "link",
+         "Display as menu": "menu",
+         "Don't display this item": "none"
+     },
+    "description": "Games                     ",
+    "tooltip": "Explore Games"
  },
- "menu-label" : {
-    "type" : "entry",
-    "default" : "",
-    "description" : "Menu Text",
-    "tooltip" : "Enter custom text to show in the panel."
+ "show-help" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Help",
+    "tooltip": "Show Help"
+ }, 
+ "show-homegroup" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Home group",
+    "tooltip": "Show the home group"
+ }, 
+ "show-music" : {
+    "type": "combobox",
+    "default": "link",
+    "options": {
+         "Display as link": "link",
+         "Display as menu": "menu",
+         "Don't display this item": "none"
+     },
+    "description": "Music                       ",
+    "tooltip": "Explore My Music"
+ },
+ "show-network" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Network",
+    "tooltip": "Show the network"
+ }, 
+ "show-personal" : {
+    "type": "combobox",
+    "default": "link",
+    "options": {
+         "Display as link": "link",
+         "Display as menu": "menu",
+         "Don't display this item": "none"
+     },
+    "description": "Personal Folder     ",
+    "tooltip": "Explore My Personal folder"
+ },
+ "show-pictures" : {
+    "type": "combobox",
+    "default": "link",
+    "options": {
+         "Display as link": "link",
+         "Display as menu": "menu",
+         "Don't display this item": "none"
+     },
+    "description": "Pictures                   ",
+    "tooltip": "Explore My Documents"
  },
  "show-recent" : {
     "type" : "checkbox",
@@ -95,6 +141,25 @@
     "description": "Show recent files",
     "tooltip": "Choose whether or not to show a recent file list in the menu."
  },
+ "show-run" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Run Command",
+    "tooltip": "Enter command to run"
+ },
+ 
+ "show-videos" : {
+    "type": "combobox",
+    "default": "link",
+    "options": {
+         "Display as link": "link",
+         "Display as menu": "menu",
+         "Don't display this item": "none"
+     },
+    "description": "Videos                      ",
+    "tooltip": "Explore My Videos"
+ },
+ 
  "show-places" : {
     "type" : "checkbox",
     "default" : true,

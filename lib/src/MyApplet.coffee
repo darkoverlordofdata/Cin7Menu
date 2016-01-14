@@ -12,13 +12,28 @@ class MyApplet
       @menuManager.addMenu @menu
       @actor.connect "key-press-event", @_onSourceKeyPress
       @settings = new Settings.AppletSettings(this, "Cin7Menu@darkoverlordofdata.com", instance_id)
+      @settings.bindProperty Settings.BindingDirection.IN, "show-computer", "showComputer", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-connnection", "showConnection", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-control-panel", "showSettings", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-default-programs", "showDefaults", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-devices", "showDevices", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-documents", "showDocuments", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-downloads", "showDownloads", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-favorites", "showFavorites", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-games", "showGames", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-help", "showHelp", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-homegroup", "showHomegroup", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-music", "showMusic", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-network", "showNetwork", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-personal", "showPersonal", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-pictures", "showPictures", @_updateQuickLinks, null
       @settings.bindProperty Settings.BindingDirection.IN, "show-recent", "showRecent", @_refreshPlacesAndRecent, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-run", "showRun", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-videos", "showVideos", @_updateQuickLinks, null
       @settings.bindProperty Settings.BindingDirection.IN, "show-places", "showPlaces", @_refreshPlacesAndRecent, null
       @settings.bindProperty Settings.BindingDirection.IN, "activate-on-hover", "activateOnHover", @_updateActivateOnHover, null
       @_updateActivateOnHover()
       @menu.actor.add_style_class_name "menu-background"
-      @settings.bindProperty Settings.BindingDirection.IN, "menu-icon", "menuIcon", @_updateIconAndLabel, null
-      @settings.bindProperty Settings.BindingDirection.IN, "menu-label", "menuLabel", @_updateIconAndLabel, null
       @_updateIconAndLabel()
       @_searchInactiveIcon = new St.Icon(
         style_class: "menu-search-entry-icon"
@@ -104,52 +119,28 @@ class MyApplet
     @favsBox.style = "min-height: " + (@rightButtonsBox.actor.get_height() - 100) + "px;min-width: 235px;"
     return
 
-    # @menu.quicklinks[0] = @quicklink_0
-    # @menu.quicklinks[1] = @quicklink_1
-    # @menu.quicklinks[2] = @quicklink_2
-    # @menu.quicklinks[3] = @quicklink_3
-    # @menu.quicklinks[4] = @quicklink_4
-    # @menu.quicklinks[5] = @quicklink_5
-    # @menu.quicklinks[6] = @quicklink_6
-    # @menu.quicklinks[7] = @quicklink_7
-    # @menu.quicklinks[8] = @quicklink_8
-    # @menu.quicklinks[9] = @quicklink_9
-    # @menu.quicklinks[10] = @quicklink_10
-    # @menu.quicklinks[11] = @quicklink_11
-    # @menu.quicklinks[12] = @quicklink_12
-    # @menu.quicklinks[13] = @quicklink_13
-    # @menu.quicklinks[14] = @quicklink_14
-    # @menu.quicklinks[15] = @quicklink_15
-    # @menu.quicklinks[16] = @quicklink_16
-    # @menu.quicklinks[17] = @quicklink_17
-    # @menu.quicklinks[18] = @quicklink_18
-    # @menu.quicklinks[19] = @quicklink_19
-    
   _updateQuickLinks: =>
     
     @menu.quicklinks = [
       "separator"
       "Home,folder-home,nemo"
-      "Documents,folder-documents,nemo Documents"
-      "Pictures,folder-pictures,nemo Pictures"
-      "Music,folder-music,nemo Music"
-      # "Videos,folder-videos,nemo Videos"
-      "Downloads,folder-downloads,nemo Downloads"
-      "separator"
-      "Computer,computer,nemo computer:///"
-      "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info"
-      "System Settings,control-center2,cinnamon-settings"
-      "Software Manager,package-manager,gksu mintinstall"
-      "Terminal,terminal,gnome-terminal"
-      "Help,help,yelp"
-      "separator"
-      ""
-      ""
-      ""
-      ""
-      ""
-      ""
     ]
+    @menu.quicklinks.push "Documents,folder-documents,nemo Documents" if @showDocuments is "link"
+    @menu.quicklinks.push "Pictures,folder-pictures,nemo Pictures" if @showPictures is "link"
+    @menu.quicklinks.push "Music,folder-music,nemo Music" if @showMusic is "link"
+    @menu.quicklinks.push "Videos,folder-videos,nemo Videos" if @showVideos is "link"
+    @menu.quicklinks.push "Downloads,folder-downloads,nemo Downloads" if @showDownloads is "link"
+    @menu.quicklinks.push "separator"
+    
+    @menu.quicklinks.push "Computer,computer,nemo computer:///" if @showComputer is "link"
+    @menu.quicklinks.push "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info"
+    @menu.quicklinks.push "System Settings,control-center2,cinnamon-settings" if @showSettings is "link"
+    @menu.quicklinks.push "Software Manager,package-manager,gksu mintinstall" if @showRun
+    @menu.quicklinks.push "Terminal,terminal,gnome-terminal"
+    @menu.quicklinks.push "Help,help,yelp" if @shoHelp is "link"
+    @menu.quicklinks.push "separator"
+    
+
     @menu.quicklinkOptions = @quicklinkOptions
     @rightButtonsBox.addItems()
     @rightButtonsBox._update_quicklinks @quicklinkOptions
@@ -227,11 +218,13 @@ class MyApplet
     return
 
   _updateIconAndLabel: =>
-    @set_applet_label @menuLabel
+    menuLabel = ""
+    menuIcon = ".local/share/cinnamon/applets/Cin7Menu@darkoverlordofdata.com/icon.png"
+    @set_applet_label menuLabel
     try
-      @set_applet_icon_path @menuIcon
+      @set_applet_icon_path menuIcon
     catch e
-      global.logWarning "Could not load icon file \"" + @menuIcon + "\" for menu button"
+      global.logWarning "Could not load icon file \"" + menuIcon + "\" for menu button"
     return
 
   _onMenuKeyPress: (actor, event) =>
