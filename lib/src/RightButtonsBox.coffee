@@ -66,6 +66,7 @@ class RightButtonsBox
             @quicklinks[i] = new TextBoxItem(_(split[0]), split[1], "Util.spawnCommandLine('" + split[2] + "')", @menu, @hoverIcon, false)
             if split[0] is 'Home' then @userLink = @quicklinks[i]
             @itemsBox.add_actor @quicklinks[i].actor
+            
     @shutdown = new TextBoxItem(_("Shutdown"), "system-shutdown", "Session.ShutdownRemote()", @menu, @hoverIcon, false)
     @logout = new TextBoxItem(_("Logout"), "gnome-logout", "Session.LogoutRemote(0)", @menu, @hoverIcon, false)
     screensaver_settings = new Gio.Settings(schema: "org.cinnamon.desktop.screensaver")

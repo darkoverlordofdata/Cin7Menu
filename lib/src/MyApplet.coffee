@@ -13,7 +13,7 @@ class MyApplet
       @actor.connect "key-press-event", @_onSourceKeyPress
       @settings = new Settings.AppletSettings(this, "Cin7Menu@darkoverlordofdata.com", instance_id)
       @settings.bindProperty Settings.BindingDirection.IN, "show-computer", "showComputer", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-connnection", "showConnection", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-connection", "showConnection", @_updateQuickLinks, null
       @settings.bindProperty Settings.BindingDirection.IN, "show-control-panel", "showSettings", @_updateQuickLinks, null
       @settings.bindProperty Settings.BindingDirection.IN, "show-default-programs", "showDefaults", @_updateQuickLinks, null
       @settings.bindProperty Settings.BindingDirection.IN, "show-devices", "showDevices", @_updateQuickLinks, null
@@ -121,25 +121,73 @@ class MyApplet
 
   _updateQuickLinks: =>
     
-    @menu.quicklinks = [
-      "separator"
-      "Home,folder-home,nemo"
-    ]
-    @menu.quicklinks.push "Documents,folder-documents,nemo Documents" if @showDocuments is "link"
-    @menu.quicklinks.push "Pictures,folder-pictures,nemo Pictures" if @showPictures is "link"
-    @menu.quicklinks.push "Music,folder-music,nemo Music" if @showMusic is "link"
-    @menu.quicklinks.push "Videos,folder-videos,nemo Videos" if @showVideos is "link"
-    @menu.quicklinks.push "Downloads,folder-downloads,nemo Downloads" if @showDownloads is "link"
+    @menu.quicklinks = []
+
+    switch @showPersonal
+      when "link" then @menu.quicklinks.push "Home,folder-home,nemo" 
+      when "menu" then @menu.quicklinks.push "Home,folder-home,nemo"
+     
+    switch @showDocuments
+      when "link" then @menu.quicklinks.push "Documents,folder-documents,nemo Documents" 
+      when "menu" then @menu.quicklinks.push "Documents,folder-documents,nemo Documents"
+     
+    switch @showPictures
+      when "link" then @menu.quicklinks.push "Pictures,folder-pictures,nemo Pictures"
+      when "menu" then @menu.quicklinks.push "Pictures,folder-pictures,nemo Pictures"
+
+    switch @showMusic
+      when "link" then @menu.quicklinks.push "Music,folder-music,nemo Music"
+      when "menu" then @menu.quicklinks.push "Music,folder-music,nemo Music"
+   
+    switch @showVideos
+      when "link" then @menu.quicklinks.push "Videos,folder-videos,nemo Videos"
+      when "menu" then @menu.quicklinks.push "Videos,folder-videos,nemo Videos"
+      
+    switch @showDownloads
+      when "link" then @menu.quicklinks.push "Downloads,folder-downloads,nemo Downloads"
+      when "menu" then @menu.quicklinks.push "Downloads,folder-downloads,nemo Downloads"
+      
     @menu.quicklinks.push "separator"
     
-    @menu.quicklinks.push "Computer,computer,nemo computer:///" if @showComputer is "link"
-    @menu.quicklinks.push "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info"
-    @menu.quicklinks.push "System Settings,control-center2,cinnamon-settings" if @showSettings is "link"
-    @menu.quicklinks.push "Software Manager,package-manager,gksu mintinstall" if @showRun
-    @menu.quicklinks.push "Terminal,terminal,gnome-terminal"
-    @menu.quicklinks.push "Help,help,yelp" if @shoHelp is "link"
-    @menu.quicklinks.push "separator"
+    switch @showGames
+      when "link" then @menu.quicklinks.push "Games,games,nemo games"
+      when "menu" then @menu.quicklinks.push "Games,games,nemo games"
+
+    switch @showComputer
+      when "link" then @menu.quicklinks.push "Computer,computer,nemo computer:///"
+      when "menu" then @menu.quicklinks.push "Computer,computer,nemo computer:///"
+
+    @menu.quicklinks.push "Software Manager,package-manager,gksu mintinstall"
+    # switch @showComputer
+    #   when "link" then @menu.quicklinks.push "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info"
+    #   when "menu" then @menu.quicklinks.push "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info"
+            
+    if @showConnection
+      @menu.quicklinks.push "Connect To,network,cinnamon-settings network"
     
+    if @showNetwork
+      @menu.quicklinks.push "Network,network,nemo network:///"
+
+    @menu.quicklinks.push "separator"
+
+    switch @showSettings
+      when "link" then @menu.quicklinks.push "Control Panel,control-center2,cinnamon-settings" 
+      when "menu" then @menu.quicklinks.push "Control Panel,control-center2,cinnamon-settings" 
+      
+    if @showDevices
+      @menu.quicklinks.push "Printers,printers,system-config-printer"
+    
+    if @showDefaults
+      @menu.quicklinks.push "Default Programs,network,cinnamon-settings default"
+      
+    if @showHelp
+      @menu.quicklinks.push "Help,help,yelp" 
+      
+    if @showRun      
+      @menu.quicklinks.push "Terminal,terminal,gnome-terminal"
+    
+    if @showQuicklinksShutdownMenu
+      @menu.quicklinks.push "separator"
 
     @menu.quicklinkOptions = @quicklinkOptions
     @rightButtonsBox.addItems()

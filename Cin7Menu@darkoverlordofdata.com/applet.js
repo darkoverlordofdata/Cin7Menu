@@ -1589,7 +1589,7 @@ MyApplet = (function() {
       this.actor.connect("key-press-event", this._onSourceKeyPress);
       this.settings = new Settings.AppletSettings(this, "Cin7Menu@darkoverlordofdata.com", instance_id);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-computer", "showComputer", this._updateQuickLinks, null);
-      this.settings.bindProperty(Settings.BindingDirection.IN, "show-connnection", "showConnection", this._updateQuickLinks, null);
+      this.settings.bindProperty(Settings.BindingDirection.IN, "show-connection", "showConnection", this._updateQuickLinks, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-control-panel", "showSettings", this._updateQuickLinks, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-default-programs", "showDefaults", this._updateQuickLinks, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-devices", "showDevices", this._updateQuickLinks, null);
@@ -1705,38 +1705,94 @@ MyApplet = (function() {
   };
 
   MyApplet.prototype._updateQuickLinks = function() {
-    this.menu.quicklinks = ["separator", "Home,folder-home,nemo"];
-    if (this.showDocuments === "link") {
-      this.menu.quicklinks.push("Documents,folder-documents,nemo Documents");
+    this.menu.quicklinks = [];
+    switch (this.showPersonal) {
+      case "link":
+        this.menu.quicklinks.push("Home,folder-home,nemo");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Home,folder-home,nemo");
     }
-    if (this.showPictures === "link") {
-      this.menu.quicklinks.push("Pictures,folder-pictures,nemo Pictures");
+    switch (this.showDocuments) {
+      case "link":
+        this.menu.quicklinks.push("Documents,folder-documents,nemo Documents");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Documents,folder-documents,nemo Documents");
     }
-    if (this.showMusic === "link") {
-      this.menu.quicklinks.push("Music,folder-music,nemo Music");
+    switch (this.showPictures) {
+      case "link":
+        this.menu.quicklinks.push("Pictures,folder-pictures,nemo Pictures");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Pictures,folder-pictures,nemo Pictures");
     }
-    if (this.showVideos === "link") {
-      this.menu.quicklinks.push("Videos,folder-videos,nemo Videos");
+    switch (this.showMusic) {
+      case "link":
+        this.menu.quicklinks.push("Music,folder-music,nemo Music");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Music,folder-music,nemo Music");
     }
-    if (this.showDownloads === "link") {
-      this.menu.quicklinks.push("Downloads,folder-downloads,nemo Downloads");
+    switch (this.showVideos) {
+      case "link":
+        this.menu.quicklinks.push("Videos,folder-videos,nemo Videos");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Videos,folder-videos,nemo Videos");
+    }
+    switch (this.showDownloads) {
+      case "link":
+        this.menu.quicklinks.push("Downloads,folder-downloads,nemo Downloads");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Downloads,folder-downloads,nemo Downloads");
     }
     this.menu.quicklinks.push("separator");
-    if (this.showComputer === "link") {
-      this.menu.quicklinks.push("Computer,computer,nemo computer:///");
+    switch (this.showGames) {
+      case "link":
+        this.menu.quicklinks.push("Games,games,nemo games");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Games,games,nemo games");
     }
-    this.menu.quicklinks.push("System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info");
-    if (this.showSettings === "link") {
-      this.menu.quicklinks.push("System Settings,control-center2,cinnamon-settings");
+    switch (this.showComputer) {
+      case "link":
+        this.menu.quicklinks.push("Computer,computer,nemo computer:///");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Computer,computer,nemo computer:///");
     }
-    if (this.showRun) {
-      this.menu.quicklinks.push("Software Manager,package-manager,gksu mintinstall");
+    this.menu.quicklinks.push("Software Manager,package-manager,gksu mintinstall");
+    if (this.showConnection) {
+      this.menu.quicklinks.push("Connect To,network,cinnamon-settings network");
     }
-    this.menu.quicklinks.push("Terminal,terminal,gnome-terminal");
-    if (this.shoHelp === "link") {
+    if (this.showNetwork) {
+      this.menu.quicklinks.push("Network,network,nemo network:///");
+    }
+    this.menu.quicklinks.push("separator");
+    switch (this.showSettings) {
+      case "link":
+        this.menu.quicklinks.push("Control Panel,control-center2,cinnamon-settings");
+        break;
+      case "menu":
+        this.menu.quicklinks.push("Control Panel,control-center2,cinnamon-settings");
+    }
+    if (this.showDevices) {
+      this.menu.quicklinks.push("Printers,printers,system-config-printer");
+    }
+    if (this.showDefaults) {
+      this.menu.quicklinks.push("Default Programs,network,cinnamon-settings default");
+    }
+    if (this.showHelp) {
       this.menu.quicklinks.push("Help,help,yelp");
     }
-    this.menu.quicklinks.push("separator");
+    if (this.showRun) {
+      this.menu.quicklinks.push("Terminal,terminal,gnome-terminal");
+    }
+    if (this.showQuicklinksShutdownMenu) {
+      this.menu.quicklinks.push("separator");
+    }
     this.menu.quicklinkOptions = this.quicklinkOptions;
     this.rightButtonsBox.addItems();
     this.rightButtonsBox._update_quicklinks(this.quicklinkOptions);
