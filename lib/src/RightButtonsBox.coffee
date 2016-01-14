@@ -16,8 +16,15 @@ class RightButtonsBox
     @_container.connect "get-preferred-width", @_getPreferredWidth
     @_container.connect "allocate", @_allocate
     @_container.add_actor @itemsBox
+    @userName = ""
     return
 
+  setName:(name) =>
+    @userName = name
+    @userLink.label.text = name[0].toUpperCase()+name[1..]
+    return
+    
+  
   _update_quicklinks: (quicklinkOptions) =>
     for i of @quicklinks
       @quicklinks[i]._update quicklinkOptions
@@ -44,7 +51,7 @@ class RightButtonsBox
   addItems: =>
     @itemsBox.destroy_all_children()
     @shutdownBox.destroy_all_children()
-    @hoverIcon = new HoverIcon(@menu)
+    @hoverIcon = new HoverIcon(@menu, this)
     @itemsBox.add_actor @hoverIcon.userBox
     @quicklinks = []
     for i of @menu.quicklinks
@@ -57,6 +64,7 @@ class RightButtonsBox
           split = @menu.quicklinks[i].split(",")
           if split.length is 3
             @quicklinks[i] = new TextBoxItem(_(split[0]), split[1], "Util.spawnCommandLine('" + split[2] + "')", @menu, @hoverIcon, false)
+            if split[0] is 'Home' then @userLink = @quicklinks[i]
             @itemsBox.add_actor @quicklinks[i].actor
     @shutdown = new TextBoxItem(_("Shutdown"), "system-shutdown", "Session.ShutdownRemote()", @menu, @hoverIcon, false)
     @logout = new TextBoxItem(_("Logout"), "gnome-logout", "Session.LogoutRemote(0)", @menu, @hoverIcon, false)
@@ -110,10 +118,3 @@ class RightButtonsBox
     mainBoxHeight = @appsMenuButton.mainBox.get_height()
     return
 
-# [minWidth, minHeight, naturalWidth, naturalHeight] = this.shutDownItemsBox.get_preferred_size();
-
-# childBox.y1 = mainBoxHeight - 110;
-# childBox.y2 = childBox.y1;
-# childBox.x1 = 0;
-# childBox.x2 = childBox.x1 + naturalWidth;
-# this.shutDownItemsBox.allocate(childBox, flags);

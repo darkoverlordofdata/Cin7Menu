@@ -1,7 +1,7 @@
 Applet = imports.ui.applet
 Mainloop = imports.mainloop
 CMenu = imports.gi.CMenu
-Lang = imports.lang
+#Lang = imports.lang
 Cinnamon = imports.gi.Cinnamon
 St = imports.gi.St
 Clutter = imports.gi.Clutter

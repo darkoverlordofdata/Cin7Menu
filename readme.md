@@ -23,3 +23,9 @@ $ npm run build
 $ mv ./Cin7Menu@darkoverlordofdata.com ~./local/share/cinnamon/applets
 
 
+## Motivation
+
+I switch back and forth alot between Windows 7 and Mint machines.
+I want the 2 desktops to be arranged the same - same background, same shortcuts, and in most cases, the same apps.
+With Babun, I have almost the same terminal. Stardoc replaces Cairo.
+So why not the same menu? And this is one case where Windows has the best widget with the StartMenu.

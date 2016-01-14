@@ -16,10 +16,14 @@ class ApplicationContextMenuItem
 
   activate: (event) =>
     switch @_action
+    
       when "add_to_panel"
         winListApplet = false
         try
           winListApplet = imports.ui.appletManager.applets["WindowListGroup@jake.phy@gmail.com"]
+        catch e
+          #global.log e
+        
         if winListApplet
           winListApplet.applet.GetAppFavorites().addFavorite @_appButton.app.get_id()
         else
@@ -33,6 +37,7 @@ class ApplicationContextMenuItem
             enabled_applets = global.settings.get_strv("enabled-applets")
             enabled_applets.push "panel1:right:0:panel-launchers@cinnamon.org:" + new_applet_id
             global.settings.set_strv "enabled-applets", enabled_applets
+            
       when "add_to_desktop"
         file = Gio.file_new_for_path(@_appButton.app.get_app_info().get_filename())
         destFile = Gio.file_new_for_path(USER_DESKTOP_PATH + "/" + @_appButton.app.get_id())
@@ -44,9 +49,12 @@ class ApplicationContextMenuItem
           Util.spawnCommandLine "chmod +x \"" + USER_DESKTOP_PATH + "/" + @_appButton.app.get_id() + "\""
         catch e
           global.log e
+          
       when "add_to_favorites"
         AppFavorites.getAppFavorites().addFavorite @_appButton.app.get_id()
+        
       when "remove_from_favorites"
         AppFavorites.getAppFavorites().removeFavorite @_appButton.app.get_id()
+        
     @_appButton.toggleMenu()
     false

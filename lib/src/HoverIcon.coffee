@@ -1,6 +1,6 @@
 class HoverIcon
 
-  constructor: (parent) ->
+  constructor: (parent, @owner) ->
     @actor = new St.Bin()
     @icon = new St.Icon(
       icon_size: HOVER_ICON_SIZE
@@ -55,7 +55,8 @@ class HoverIcon
     if @_user.is_loaded and @showUser
       
       #this.set_applet_tooltip(this._user.get_real_name());
-      @userLabel.set_text @_user.get_real_name()
+      @owner.setName(@_user.get_real_name())
+      @userLabel.set_text "" # @_user.get_real_name()
       if @_userIcon
         iconFileName = @_user.get_icon_file()
         iconFile = Gio.file_new_for_path(iconFileName)

@@ -6,7 +6,7 @@ class MyApplet
   constructor: (orientation, panel_height, instance_id) ->
     Applet.TextIconApplet::_init.call this, orientation, panel_height, instance_id
     try
-      @set_applet_tooltip _("Menu")
+      @set_applet_tooltip _("Start")
       @menuManager = new PopupMenu.PopupMenuManager(this)
       @menu = new Applet.AppletPopupMenu(this, orientation)
       @menuManager.addMenu @menu
@@ -19,9 +19,6 @@ class MyApplet
       @menu.actor.add_style_class_name "menu-background"
       @settings.bindProperty Settings.BindingDirection.IN, "menu-icon", "menuIcon", @_updateIconAndLabel, null
       @settings.bindProperty Settings.BindingDirection.IN, "menu-label", "menuLabel", @_updateIconAndLabel, null
-      @settings.bindProperty Settings.BindingDirection.IN, "all-programs-label", "allProgramsLabel", null, null
-      @settings.bindProperty Settings.BindingDirection.IN, "favorites-label", "favoritesLabel", null, null
-      @settings.bindProperty Settings.BindingDirection.IN, "shutdown-label", "shutdownLabel", null, null
       @_updateIconAndLabel()
       @_searchInactiveIcon = new St.Icon(
         style_class: "menu-search-entry-icon"
@@ -65,26 +62,6 @@ class MyApplet
       @_pathCompleter.set_dirs_only false
       @lastAcResults = new Array()
       @settings.bindProperty Settings.BindingDirection.IN, "search-filesystem", "searchFilesystem", null, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-0", "quicklink_0", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-1", "quicklink_1", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-2", "quicklink_2", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-3", "quicklink_3", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-4", "quicklink_4", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-5", "quicklink_5", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-6", "quicklink_6", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-7", "quicklink_7", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-8", "quicklink_8", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-9", "quicklink_9", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-10", "quicklink_10", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-11", "quicklink_11", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-12", "quicklink_12", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-13", "quicklink_13", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-14", "quicklink_14", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-15", "quicklink_15", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-16", "quicklink_16", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-17", "quicklink_17", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-18", "quicklink_18", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-19", "quicklink_19", @_updateQuickLinks, null
       @settings.bindProperty Settings.BindingDirection.IN, "quicklink-options", "quicklinkOptions", @_updateQuickLinks, null
       @_updateQuickLinks()
     catch e
@@ -127,28 +104,52 @@ class MyApplet
     @favsBox.style = "min-height: " + (@rightButtonsBox.actor.get_height() - 100) + "px;min-width: 235px;"
     return
 
+    # @menu.quicklinks[0] = @quicklink_0
+    # @menu.quicklinks[1] = @quicklink_1
+    # @menu.quicklinks[2] = @quicklink_2
+    # @menu.quicklinks[3] = @quicklink_3
+    # @menu.quicklinks[4] = @quicklink_4
+    # @menu.quicklinks[5] = @quicklink_5
+    # @menu.quicklinks[6] = @quicklink_6
+    # @menu.quicklinks[7] = @quicklink_7
+    # @menu.quicklinks[8] = @quicklink_8
+    # @menu.quicklinks[9] = @quicklink_9
+    # @menu.quicklinks[10] = @quicklink_10
+    # @menu.quicklinks[11] = @quicklink_11
+    # @menu.quicklinks[12] = @quicklink_12
+    # @menu.quicklinks[13] = @quicklink_13
+    # @menu.quicklinks[14] = @quicklink_14
+    # @menu.quicklinks[15] = @quicklink_15
+    # @menu.quicklinks[16] = @quicklink_16
+    # @menu.quicklinks[17] = @quicklink_17
+    # @menu.quicklinks[18] = @quicklink_18
+    # @menu.quicklinks[19] = @quicklink_19
+    
   _updateQuickLinks: =>
-    @menu.quicklinks = []
-    @menu.quicklinks[0] = @quicklink_0
-    @menu.quicklinks[1] = @quicklink_1
-    @menu.quicklinks[2] = @quicklink_2
-    @menu.quicklinks[3] = @quicklink_3
-    @menu.quicklinks[4] = @quicklink_4
-    @menu.quicklinks[5] = @quicklink_5
-    @menu.quicklinks[6] = @quicklink_6
-    @menu.quicklinks[7] = @quicklink_7
-    @menu.quicklinks[8] = @quicklink_8
-    @menu.quicklinks[9] = @quicklink_9
-    @menu.quicklinks[10] = @quicklink_10
-    @menu.quicklinks[11] = @quicklink_11
-    @menu.quicklinks[12] = @quicklink_12
-    @menu.quicklinks[13] = @quicklink_13
-    @menu.quicklinks[14] = @quicklink_14
-    @menu.quicklinks[15] = @quicklink_15
-    @menu.quicklinks[16] = @quicklink_16
-    @menu.quicklinks[17] = @quicklink_17
-    @menu.quicklinks[18] = @quicklink_18
-    @menu.quicklinks[19] = @quicklink_19
+    
+    @menu.quicklinks = [
+      "separator"
+      "Home,folder-home,nemo"
+      "Documents,folder-documents,nemo Documents"
+      "Pictures,folder-pictures,nemo Pictures"
+      "Music,folder-music,nemo Music"
+      # "Videos,folder-videos,nemo Videos"
+      "Downloads,folder-downloads,nemo Downloads"
+      "separator"
+      "Computer,computer,nemo computer:///"
+      "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info"
+      "System Settings,control-center2,cinnamon-settings"
+      "Software Manager,package-manager,gksu mintinstall"
+      "Terminal,terminal,gnome-terminal"
+      "Help,help,yelp"
+      "separator"
+      ""
+      ""
+      ""
+      ""
+      ""
+      ""
+    ]
     @menu.quicklinkOptions = @quicklinkOptions
     @rightButtonsBox.addItems()
     @rightButtonsBox._update_quicklinks @quicklinkOptions
@@ -774,7 +775,7 @@ class MyApplet
     @_refreshFavs()
     @separator = new PopupMenu.PopupSeparatorMenuItem()
     @separator.actor.set_style "padding: 0em 1em;"
-    @appsButton = new AllProgramsItem(_(@allProgramsLabel), "forward", this, false)
+    @appsButton = new AllProgramsItem(_("All Programs"), "forward", this, false)
     @leftPaneBox = new St.BoxLayout(
       style_class: "menu-favorites-box"
       vertical: true
@@ -822,15 +823,15 @@ class MyApplet
   switchPanes: (pane) =>
     if pane is "apps"
       @leftPane.set_child @appsBox
-      @appsButton.label.set_text " " + _(@favoritesLabel)
+      @appsButton.label.set_text " " + _("Back")
       @rightButtonsBox.actor.hide()
       @_appletStyles "apps"
     else
       @leftPane.set_child @favsBox
-      @appsButton.label.set_text " " + _(@allProgramsLabel)
+      @appsButton.label.set_text " " + _("All Programs")
       @rightButtonsBox.actor.show()  if @menu.showQuicklinks
       @_appletStyles "favs"
-    @rightButtonsBox.shutdown.label.set_text _(@shutdownLabel)
+    @rightButtonsBox.shutdown.label.set_text _("Shutdown")
     return
 
   _updateVFade: =>
