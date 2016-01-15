@@ -1,6 +1,9 @@
 class FavoritesBox
 
   constructor: ->
+    @_init()
+  
+  _init:() =>
     @actor = new St.BoxLayout(vertical: true)
     @actor._delegate = this
     @_dragPlaceholder = null

@@ -1,6 +1,9 @@
 class CategoriesApplicationsBox
 
   constructor: ->
+    @_init()
+    
+  _init: =>    
     @actor = new St.BoxLayout()
     @actor._delegate = this
     return

@@ -14,12 +14,6 @@
 ###
 fs = require('fs')
 
-# projectTypes enum:
-JavaScript      = 0   # javascript
-TypeScript      = 1   # typescript
-CoffeeScript    = 2   # coffeescript
-BabelScript     = 4   # es6
-ClosureCompiler = 8   # plovr
 
 # paths:
 LIB_NAME        = "Cin7Menu"

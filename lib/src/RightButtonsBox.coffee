@@ -1,6 +1,9 @@
 class RightButtonsBox
 
   constructor: (appsMenuButton, menu) ->
+   @_init(appsMenuButton, menu)
+   
+  _init: (appsMenuButton, menu) =>
     @appsMenuButton = appsMenuButton
     @actor = new St.BoxLayout()
     @itemsBox = new St.BoxLayout(vertical: true)

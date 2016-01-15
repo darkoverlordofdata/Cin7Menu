@@ -1,7 +1,11 @@
-class AllProgramsItem extends AppPopupSubMenuMenuItem
+class AllProgramsItem 
+  __proto__: AppPopupSubMenuMenuItem::
   
   constructor:(label, icon, parent) ->
-    super label
+    @_init(label, icon, parent)
+    
+  _init:(label, icon, parent) =>
+    AppPopupSubMenuMenuItem::_init.call this, label
     @actor.set_style_class_name ""
     @box = new St.BoxLayout(style_class: "menu-category-button")
     @parent = parent

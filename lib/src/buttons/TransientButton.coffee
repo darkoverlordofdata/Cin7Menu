@@ -4,7 +4,7 @@ class TransientButton
   constructor: (appsMenuButton, pathOrCommand) ->
     @_init appsMenuButton, pathOrCommand
   
-  _init: (appsMenuButton, pathOrCommand) ->
+  _init: (appsMenuButton, pathOrCommand) =>
     displayPath = pathOrCommand
     if pathOrCommand.charAt(0) is "~"
       pathOrCommand = pathOrCommand.slice(1)

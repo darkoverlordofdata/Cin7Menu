@@ -4,7 +4,7 @@ class ApplicationButton extends GenericApplicationButton
   constructor: (appsMenuButton, app) ->
     @_init(appsMenuButton, app)
       
-  _init: (appsMenuButton, app) ->
+  _init: (appsMenuButton, app) =>
     GenericApplicationButton::_init.call this, appsMenuButton, app, true
     @category = new Array()
     @actor.set_style_class_name "menu-application-button"

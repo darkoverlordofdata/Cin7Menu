@@ -4,7 +4,7 @@ class RecentClearButton
   constructor: (appsMenuButton) ->
     @_init appsMenuButton
   
-  _init: (appsMenuButton) ->
+  _init: (appsMenuButton) =>
     PopupMenu.PopupBaseMenuItem::_init.call this,
       hover: false
 

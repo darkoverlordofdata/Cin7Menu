@@ -4,7 +4,7 @@ class ApplicationContextMenuItem
   constructor:(appButton, label, action) ->
     @_init appButton, label, action
 
-  _init: (appButton, label, action) ->
+  _init: (appButton, label, action) =>
     PopupMenu.PopupBaseMenuItem::_init.call this,
       focusOnHover: false
 

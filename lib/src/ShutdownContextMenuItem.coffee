@@ -1,7 +1,11 @@
-class ShutdownContextMenuItem extends ApplicationContextMenuItem
+class ShutdownContextMenuItem 
+  __proto__: ApplicationContextMenuItem::
   
   constructor: (@parentMenu, menu, label, action) ->
-    super menu, label, action
+    @_init(@parentMenu, menu, label, action)
+    
+  _init: (@parentMenu, menu, label, action) =>
+    ApplicationContextMenuItem::_init.call this, menu, label, action
     @_screenSaverProxy = new ScreenSaver.ScreenSaverProxy()
     return
 

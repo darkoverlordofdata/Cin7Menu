@@ -4,7 +4,7 @@ class PlaceButton
   constructor: (appsMenuButton, place, button_name) ->
     @_init appsMenuButton, place, button_name
   
-  _init: (appsMenuButton, place, button_name) ->
+  _init: (appsMenuButton, place, button_name) =>
     PopupMenu.PopupBaseMenuItem::_init.call this,
       hover: false
 

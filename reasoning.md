@@ -12,3 +12,5 @@ To start with, both coffeescript and typescript 'class' semantics are more clear
 Lang.bind doesn't seem to be any different than Function.bind, in fact, it calls Function.bind. It can be replaced with Function.bind, or the convenient fat arrow. 
 
 Lang.* uses loose equality checks - instability waiting to happen.
+
+

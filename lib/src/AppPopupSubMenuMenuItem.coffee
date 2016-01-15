@@ -4,7 +4,7 @@ class AppPopupSubMenuMenuItem
   constructor:(args...) ->
     @_init args...
   
-  _init: (text, hide_expander) ->
+  _init: (text, hide_expander) =>
     PopupMenu.PopupBaseMenuItem::_init.call this
     @actor.add_style_class_name "popup-submenu-menu-item"
     table = new St.Table(

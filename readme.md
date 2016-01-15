@@ -10,7 +10,14 @@
 Based on StarkMenu@mintystark
 100% Pure Coffee-script Solution.
 
-Status: baseline port. No mods yet.
+Status: new configuration
+ToDo:
+* less padding on favorites
+* run ... prompt 
+* sub menu type
+* all programs menu should fit in same space as favorites.
+* all programs menu should be a tree, not side x sid
+* connect to should launch network applet instead of network settings.
 
 
 ## Install & Build

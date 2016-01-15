@@ -4,7 +4,7 @@ class RecentCategoryButton
   constructor: (app) ->
     @_init app
 
-  _init: (category) ->
+  _init: (category) =>
     PopupMenu.PopupBaseMenuItem::_init.call this,
       hover: false
 

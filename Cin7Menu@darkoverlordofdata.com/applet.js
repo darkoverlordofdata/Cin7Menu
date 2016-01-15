@@ -145,6 +145,7 @@ ApplicationContextMenuItem = (function() {
 
   function ApplicationContextMenuItem(appButton, label, action) {
     this.activate = bind(this.activate, this);
+    this._init = bind(this._init, this);
     this._init(appButton, label, action);
   }
 
@@ -224,6 +225,7 @@ AppPopupSubMenuMenuItem = (function() {
     this._onKeyPressEvent = bind(this._onKeyPressEvent, this);
     this.destroy = bind(this.destroy, this);
     this._subMenuOpenStateChanged = bind(this._subMenuOpenStateChanged, this);
+    this._init = bind(this._init, this);
     this._init.apply(this, args);
   }
 
@@ -323,6 +325,7 @@ GenericApplicationButton = (function() {
     this.closeMenu = bind(this.closeMenu, this);
     this.activate = bind(this.activate, this);
     this._onButtonReleaseEvent = bind(this._onButtonReleaseEvent, this);
+    this._init = bind(this._init, this);
     this._init(appsMenuButton, app, withMenu);
   }
 
@@ -408,6 +411,7 @@ TransientButton = (function() {
   function TransientButton(appsMenuButton, pathOrCommand) {
     this.activate = bind(this.activate, this);
     this._onButtonReleaseEvent = bind(this._onButtonReleaseEvent, this);
+    this._init = bind(this._init, this);
     this._init(appsMenuButton, pathOrCommand);
   }
 
@@ -525,6 +529,7 @@ ApplicationButton = (function(superClass) {
     this.getDragActorSource = bind(this.getDragActorSource, this);
     this.getDragActor = bind(this.getDragActor, this);
     this.get_app_id = bind(this.get_app_id, this);
+    this._init = bind(this._init, this);
     this._init(appsMenuButton, app);
   }
 
@@ -575,6 +580,7 @@ PlaceButton = (function() {
   function PlaceButton(appsMenuButton, place, button_name) {
     this.activate = bind(this.activate, this);
     this._onButtonReleaseEvent = bind(this._onButtonReleaseEvent, this);
+    this._init = bind(this._init, this);
     this._init(appsMenuButton, place, button_name);
   }
 
@@ -618,6 +624,7 @@ RecentButton = (function() {
   function RecentButton(appsMenuButton, file) {
     this.activate = bind(this.activate, this);
     this._onButtonReleaseEvent = bind(this._onButtonReleaseEvent, this);
+    this._init = bind(this._init, this);
     this._init(appsMenuButton, file);
   }
 
@@ -661,6 +668,7 @@ RecentClearButton = (function() {
 
   function RecentClearButton(appsMenuButton) {
     this._onButtonReleaseEvent = bind(this._onButtonReleaseEvent, this);
+    this._init = bind(this._init, this);
     this._init(appsMenuButton);
   }
 
@@ -702,6 +710,7 @@ CategoryButton = (function() {
   CategoryButton.prototype.__proto__ = PopupMenu.PopupBaseMenuItem.prototype;
 
   function CategoryButton(app) {
+    this._init = bind(this._init, this);
     this._init(app);
   }
 
@@ -747,6 +756,7 @@ PlaceCategoryButton = (function() {
   PlaceCategoryButton.prototype.__proto__ = PopupMenu.PopupBaseMenuItem.prototype;
 
   function PlaceCategoryButton(app) {
+    this._init = bind(this._init, this);
     this._init(app);
   }
 
@@ -777,6 +787,7 @@ RecentCategoryButton = (function() {
   RecentCategoryButton.prototype.__proto__ = PopupMenu.PopupBaseMenuItem.prototype;
 
   function RecentCategoryButton(app) {
+    this._init = bind(this._init, this);
     this._init(app);
   }
 
@@ -810,6 +821,7 @@ FavoritesButton = (function() {
     this.getDragActorSource = bind(this.getDragActorSource, this);
     this.getDragActor = bind(this.getDragActor, this);
     this.get_app_id = bind(this.get_app_id, this);
+    this._init = bind(this._init, this);
     this._init(appsMenuButton, app, nbFavorites, iconSize);
   }
 
@@ -852,8 +864,8 @@ FavoritesButton = (function() {
 
 })();
 
-TextBoxItem = (function(superClass) {
-  extend(TextBoxItem, superClass);
+TextBoxItem = (function() {
+  TextBoxItem.prototype.__proto__ = AppPopupSubMenuMenuItem.prototype;
 
   function TextBoxItem(label, icon1, func, parent1, hoverIcon) {
     this.icon = icon1;
@@ -865,8 +877,17 @@ TextBoxItem = (function(superClass) {
     this.setActive = bind(this.setActive, this);
     this._onLeaveEvent = bind(this._onLeaveEvent, this);
     this._update = bind(this._update, this);
+    this._init = bind(this._init, this);
+    this._init(label, this.icon, this.func, this.parent, this.hoverIcon);
+  }
+
+  TextBoxItem.prototype._init = function(label, icon1, func, parent1, hoverIcon) {
+    this.icon = icon1;
+    this.func = func;
+    this.parent = parent1;
+    this.hoverIcon = hoverIcon;
     this.active = false;
-    TextBoxItem.__super__.constructor.call(this, label);
+    AppPopupSubMenuMenuItem.prototype._init.call(this, label);
     this.actor.set_style_class_name("menu-category-button");
     this.actor.add_style_class_name("menu-text-item-button");
     this.actor.connect("leave-event", this._onLeaveEvent);
@@ -885,8 +906,7 @@ TextBoxItem = (function(superClass) {
       style_class: "menu-category-button-label"
     });
     this.addActor(this.label);
-    return;
-  }
+  };
 
   TextBoxItem.prototype._update = function(quicklinkOptions) {
     var icon, iconFile, iconFileName;
@@ -965,16 +985,21 @@ TextBoxItem = (function(superClass) {
 
   return TextBoxItem;
 
-})(AppPopupSubMenuMenuItem);
+})();
 
-AllProgramsItem = (function(superClass) {
-  extend(AllProgramsItem, superClass);
+AllProgramsItem = (function() {
+  AllProgramsItem.prototype.__proto__ = AppPopupSubMenuMenuItem.prototype;
 
   function AllProgramsItem(label, icon, parent) {
     this.activate = bind(this.activate, this);
     this._onButtonReleaseEvent = bind(this._onButtonReleaseEvent, this);
     this.setActive = bind(this.setActive, this);
-    AllProgramsItem.__super__.constructor.call(this, label);
+    this._init = bind(this._init, this);
+    this._init(label, icon, parent);
+  }
+
+  AllProgramsItem.prototype._init = function(label, icon, parent) {
+    AppPopupSubMenuMenuItem.prototype._init.call(this, label);
     this.actor.set_style_class_name("");
     this.box = new St.BoxLayout({
       style_class: "menu-category-button"
@@ -995,8 +1020,7 @@ AllProgramsItem = (function(superClass) {
     this.box.add_actor(this.icon);
     this.box.add_actor(this.label);
     this.addActor(this.box);
-    return;
-  }
+  };
 
   AllProgramsItem.prototype.setActive = function(active) {
     if (active) {
@@ -1022,14 +1046,20 @@ AllProgramsItem = (function(superClass) {
 
   return AllProgramsItem;
 
-})(AppPopupSubMenuMenuItem);
+})();
 
 HoverIcon = (function() {
   function HoverIcon(parent, owner) {
-    var icon;
     this.owner = owner;
     this._refresh = bind(this._refresh, this);
     this._onUserChanged = bind(this._onUserChanged, this);
+    this._init = bind(this._init, this);
+    this._init(parent, this.owner);
+  }
+
+  HoverIcon.prototype._init = function(parent, owner) {
+    var icon;
+    this.owner = owner;
     this.actor = new St.Bin();
     this.icon = new St.Icon({
       icon_size: HOVER_ICON_SIZE,
@@ -1083,8 +1113,7 @@ HoverIcon = (function() {
     this._userLoadedId = this._user.connect("notify::is_loaded", this._onUserChanged);
     this._userChangedId = this._user.connect("changed", this._onUserChanged);
     this._onUserChanged();
-    return;
-  }
+  };
 
   HoverIcon.prototype._onUserChanged = function() {
     var icon, iconFile, iconFileName;
@@ -1138,16 +1167,21 @@ HoverIcon = (function() {
 
 })();
 
-ShutdownContextMenuItem = (function(superClass) {
-  extend(ShutdownContextMenuItem, superClass);
+ShutdownContextMenuItem = (function() {
+  ShutdownContextMenuItem.prototype.__proto__ = ApplicationContextMenuItem.prototype;
 
   function ShutdownContextMenuItem(parentMenu, menu, label, action) {
     this.parentMenu = parentMenu;
     this.activate = bind(this.activate, this);
-    ShutdownContextMenuItem.__super__.constructor.call(this, menu, label, action);
-    this._screenSaverProxy = new ScreenSaver.ScreenSaverProxy();
-    return;
+    this._init = bind(this._init, this);
+    this._init(this.parentMenu, menu, label, action);
   }
+
+  ShutdownContextMenuItem.prototype._init = function(parentMenu, menu, label, action) {
+    this.parentMenu = parentMenu;
+    ApplicationContextMenuItem.prototype._init.call(this, menu, label, action);
+    this._screenSaverProxy = new ScreenSaver.ScreenSaverProxy();
+  };
 
   ShutdownContextMenuItem.prototype.activate = function(event) {
     var screensaver_dialog, screensaver_settings;
@@ -1177,18 +1211,25 @@ ShutdownContextMenuItem = (function(superClass) {
 
   return ShutdownContextMenuItem;
 
-})(ApplicationContextMenuItem);
+})();
 
-ShutdownMenu = (function(superClass) {
-  extend(ShutdownMenu, superClass);
+ShutdownMenu = (function() {
+  ShutdownMenu.prototype.__proto__ = AppPopupSubMenuMenuItem.prototype;
 
   function ShutdownMenu(parent1, hoverIcon) {
-    var menuItem;
     this.parent = parent1;
     this.hoverIcon = hoverIcon;
     this._onButtonReleaseEvent = bind(this._onButtonReleaseEvent, this);
     this.setActive = bind(this.setActive, this);
-    ShutdownMenu.__super__.constructor.call(this, "");
+    this._init = bind(this._init, this);
+    this._init(this.parent, this.hoverIcon);
+  }
+
+  ShutdownMenu.prototype._init = function(parent1, hoverIcon) {
+    var menuItem;
+    this.parent = parent1;
+    this.hoverIcon = hoverIcon;
+    AppPopupSubMenuMenuItem.prototype._init.call(this, "");
     this.actor.set_style_class_name("menu-category-button");
     this.label.destroy();
     this._triangle.destroy();
@@ -1207,8 +1248,7 @@ ShutdownMenu = (function(superClass) {
     this.menu.addMenuItem(menuItem);
     menuItem = new ShutdownContextMenuItem(this.parent, this.menu, _("Lock Screen"), "lock");
     this.menu.addMenuItem(menuItem);
-    return;
-  }
+  };
 
   ShutdownMenu.prototype.setActive = function(active) {
     if (active) {
@@ -1227,15 +1267,19 @@ ShutdownMenu = (function(superClass) {
 
   return ShutdownMenu;
 
-})(AppPopupSubMenuMenuItem);
+})();
 
 CategoriesApplicationsBox = (function() {
   function CategoriesApplicationsBox() {
     this.acceptDrop = bind(this.acceptDrop, this);
+    this._init = bind(this._init, this);
+    this._init();
+  }
+
+  CategoriesApplicationsBox.prototype._init = function() {
     this.actor = new St.BoxLayout();
     this.actor._delegate = this;
-    return;
-  }
+  };
 
   CategoriesApplicationsBox.prototype.acceptDrop = function(source, actor, x, y, time) {
     if (source instanceof FavoritesButton) {
@@ -1259,6 +1303,11 @@ RightButtonsBox = (function() {
     this.addItems = bind(this.addItems, this);
     this._update_quicklinks = bind(this._update_quicklinks, this);
     this.setName = bind(this.setName, this);
+    this._init = bind(this._init, this);
+    this._init(appsMenuButton, menu);
+  }
+
+  RightButtonsBox.prototype._init = function(appsMenuButton, menu) {
     this.appsMenuButton = appsMenuButton;
     this.actor = new St.BoxLayout();
     this.itemsBox = new St.BoxLayout({
@@ -1283,8 +1332,7 @@ RightButtonsBox = (function() {
     this._container.connect("allocate", this._allocate);
     this._container.add_actor(this.itemsBox);
     this.userName = "";
-    return;
-  }
+  };
 
   RightButtonsBox.prototype.setName = function(name) {
     this.userName = name;
@@ -1410,6 +1458,11 @@ FavoritesBox = (function() {
     this.acceptDrop = bind(this.acceptDrop, this);
     this.handleDragOver = bind(this.handleDragOver, this);
     this._clearDragPlaceholder = bind(this._clearDragPlaceholder, this);
+    this._init = bind(this._init, this);
+    this._init();
+  }
+
+  FavoritesBox.prototype._init = function() {
     this.actor = new St.BoxLayout({
       vertical: true
     });
@@ -1417,8 +1470,7 @@ FavoritesBox = (function() {
     this._dragPlaceholder = null;
     this._dragPlaceholderPos = -1;
     this._animatingPlaceholdersCount = 0;
-    return;
-  }
+  };
 
   FavoritesBox.prototype._clearDragPlaceholder = function() {
     if (this._dragPlaceholder) {

@@ -4,7 +4,7 @@ class GenericApplicationButton
   constructor: (appsMenuButton, app, withMenu) ->
     @_init appsMenuButton, app, withMenu
     
-  _init: (appsMenuButton, app, withMenu) ->
+  _init: (appsMenuButton, app, withMenu) =>
     @app = app
     @appsMenuButton = appsMenuButton
     PopupMenu.PopupBaseMenuItem::_init.call this,

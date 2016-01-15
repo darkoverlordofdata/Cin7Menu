@@ -1,9 +1,13 @@
 
-class TextBoxItem extends AppPopupSubMenuMenuItem
+class TextBoxItem 
+  __proto__: AppPopupSubMenuMenuItem::
 
   constructor: (label, @icon, @func, @parent, @hoverIcon) ->
+    @_init(label, @icon, @func, @parent, @hoverIcon)
+    
+  _init: (label, @icon, @func, @parent, @hoverIcon) =>
     @active = false
-    super label
+    AppPopupSubMenuMenuItem::_init.call this, label
     @actor.set_style_class_name "menu-category-button"
     @actor.add_style_class_name "menu-text-item-button"
     @actor.connect "leave-event", @_onLeaveEvent

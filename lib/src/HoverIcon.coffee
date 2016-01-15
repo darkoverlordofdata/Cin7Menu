@@ -1,6 +1,9 @@
 class HoverIcon
 
   constructor: (parent, @owner) ->
+    @_init(parent, @owner)
+  
+  _init: (parent, @owner) =>
     @actor = new St.Bin()
     @icon = new St.Icon(
       icon_size: HOVER_ICON_SIZE
