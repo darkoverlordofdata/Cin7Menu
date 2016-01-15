@@ -519,11 +519,17 @@ TransientButton = (function() {
 ApplicationButton = (function(superClass) {
   extend(ApplicationButton, superClass);
 
+  ApplicationButton.prototype.__proto__ = GenericApplicationButton.prototype;
+
   function ApplicationButton(appsMenuButton, app) {
     this.getDragActorSource = bind(this.getDragActorSource, this);
     this.getDragActor = bind(this.getDragActor, this);
     this.get_app_id = bind(this.get_app_id, this);
-    ApplicationButton.__super__.constructor.call(this, appsMenuButton, app, true);
+    this._init(appsMenuButton, app);
+  }
+
+  ApplicationButton.prototype._init = function(appsMenuButton, app) {
+    GenericApplicationButton.prototype._init.call(this, appsMenuButton, app, true);
     this.category = new Array();
     this.actor.set_style_class_name("menu-application-button");
     this.icon = this.app.create_icon_texture(APPLICATION_ICON_SIZE);
@@ -536,8 +542,7 @@ ApplicationButton = (function(superClass) {
     this.addActor(this.label);
     this._draggable = DND.makeDraggable(this.actor);
     this.isDraggableApp = true;
-    return;
-  }
+  };
 
   ApplicationButton.prototype.get_app_id = function() {
     return this.app.get_id();
@@ -798,15 +803,19 @@ RecentCategoryButton = (function() {
 
 })();
 
-FavoritesButton = (function(superClass) {
-  extend(FavoritesButton, superClass);
+FavoritesButton = (function() {
+  FavoritesButton.prototype.__proto__ = GenericApplicationButton.prototype;
 
   function FavoritesButton(appsMenuButton, app, nbFavorites, iconSize) {
     this.getDragActorSource = bind(this.getDragActorSource, this);
     this.getDragActor = bind(this.getDragActor, this);
     this.get_app_id = bind(this.get_app_id, this);
+    this._init(appsMenuButton, app, nbFavorites, iconSize);
+  }
+
+  FavoritesButton.prototype._init = function(appsMenuButton, app, nbFavorites, iconSize) {
     var icon_size, monitorHeight, real_size;
-    FavoritesButton.__super__.constructor.call(this, appsMenuButton, app, true);
+    GenericApplicationButton.prototype._init.call(this, appsMenuButton, app, true);
     monitorHeight = Main.layoutManager.primaryMonitor.height;
     real_size = (0.7 * monitorHeight) / nbFavorites;
     icon_size = iconSize;
@@ -823,8 +832,7 @@ FavoritesButton = (function(superClass) {
     this.addActor(this.label);
     this._draggable = DND.makeDraggable(this.actor);
     this.isDraggableApp = true;
-    return;
-  }
+  };
 
   FavoritesButton.prototype.get_app_id = function() {
     return this.app.get_id();
@@ -842,7 +850,7 @@ FavoritesButton = (function(superClass) {
 
   return FavoritesButton;
 
-})(GenericApplicationButton);
+})();
 
 TextBoxItem = (function(superClass) {
   extend(TextBoxItem, superClass);
@@ -1606,7 +1614,7 @@ MyApplet = (function() {
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-recent", "showRecent", this._refreshPlacesAndRecent, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-run", "showRun", this._updateQuickLinks, null);
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-videos", "showVideos", this._updateQuickLinks, null);
-      this.settings.bindProperty(Settings.BindingDirection.IN, "show-places", "showPlaces", this._refreshPlacesAndRecent, null);
+      this.showPlaces = false;
       this.settings.bindProperty(Settings.BindingDirection.IN, "activate-on-hover", "activateOnHover", this._updateActivateOnHover, null);
       this._updateActivateOnHover();
       this.menu.actor.add_style_class_name("menu-background");
@@ -1642,7 +1650,7 @@ MyApplet = (function() {
       AppFavorites.getAppFavorites().connect("changed", this._refreshFavs);
       this.settings.bindProperty(Settings.BindingDirection.IN, "hover-delay", "hover_delay_ms", this._update_hover_delay, null);
       this._update_hover_delay();
-      this.settings.bindProperty(Settings.BindingDirection.IN, "show-quicklinks", "showQuicklinks", this._updateQuickLinksView, null);
+      this.showQuicklinks = true;
       this._updateQuickLinksView();
       this.settings.bindProperty(Settings.BindingDirection.IN, "show-quicklinks-shutdown-menu", "showQuicklinksShutdownMenu", this._updateQuickLinksShutdownView, null);
       this._updateQuickLinksShutdownView();
@@ -1751,10 +1759,10 @@ MyApplet = (function() {
     this.menu.quicklinks.push("separator");
     switch (this.showGames) {
       case "link":
-        this.menu.quicklinks.push("Games,games,nemo games");
+        this.menu.quicklinks.push("Games,games,nemo Games");
         break;
       case "menu":
-        this.menu.quicklinks.push("Games,games,nemo games");
+        this.menu.quicklinks.push("Games,games,nemo Games");
     }
     switch (this.showComputer) {
       case "link":

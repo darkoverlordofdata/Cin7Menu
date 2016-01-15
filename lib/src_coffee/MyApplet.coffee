@@ -1,40 +1,71 @@
-   
+MyApplet = (orientation, panel_height, instance_id) ->
+  @_init orientation, panel_height, instance_id
+  return
 
-class MyApplet
+#
+#            global.display.connect('overlay-key', Lang.bind(this, function(){
+#                try{
+#                    this.menu.toggle();
+#                }
+#                catch(e) {
+#                    global.logError(e);
+#                }
+#            }));
+#	    
+
+# Jump from Categories to Appications
+
+# Jump from Appications to Categories
+
+# Need preload data before get completion. GFilenameCompleter load content of parent directory.
+# Parent directory for /usr/include/ is /usr/. So need to add fake name('a').
+
+#Remove all categories
+
+# Sort apps and add to applicationsBox
+
+# Now generate Places category and places buttons and add to the list
+
+# Now generate recent category and recent files buttons and add to the list
+
+#Remove all favorites
+
+#Load favorites again
+# + 3 because we're adding 3 system buttons at the bottom
+
+# _listApplications returns all the applications when the search
+# string is zero length. This will happend if you type a space
+# in the search entry.
+# search box autocompletion results
+
+# Don't use the pattern here, as filesystem is case sensitive
+
+# The exception from gjs contains an error string like:
+#     Error invoking Gio.app_info_launch_default_for_uri: No application
+#     is registered as handling this file
+# We are only interested in the part after the first colon.
+#var message = e.message.replace(/[^:]*: *(.+)/, '$1');
+MyApplet:: =
   __proto__: Applet.TextIconApplet::
-
-  constructor: (orientation, panel_height, instance_id) ->
+  _init: (orientation, panel_height, instance_id) ->
     Applet.TextIconApplet::_init.call this, orientation, panel_height, instance_id
     try
-      @set_applet_tooltip _("Start")
+      @set_applet_tooltip _("Menu")
       @menuManager = new PopupMenu.PopupMenuManager(this)
       @menu = new Applet.AppletPopupMenu(this, orientation)
       @menuManager.addMenu @menu
-      @actor.connect "key-press-event", @_onSourceKeyPress
+      @actor.connect "key-press-event", Lang.bind(this, @_onSourceKeyPress)
       @settings = new Settings.AppletSettings(this, "Cin7Menu@darkoverlordofdata.com", instance_id)
-      @settings.bindProperty Settings.BindingDirection.IN, "show-computer", "showComputer", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-connection", "showConnection", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-control-panel", "showSettings", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-default-programs", "showDefaults", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-devices", "showDevices", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-documents", "showDocuments", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-downloads", "showDownloads", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-favorites", "showFavorites", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-games", "showGames", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-help", "showHelp", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-homegroup", "showHomegroup", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-music", "showMusic", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-network", "showNetwork", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-personal", "showPersonal", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-pictures", "showPictures", @_updateQuickLinks, null
       @settings.bindProperty Settings.BindingDirection.IN, "show-recent", "showRecent", @_refreshPlacesAndRecent, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-run", "showRun", @_updateQuickLinks, null
-      @settings.bindProperty Settings.BindingDirection.IN, "show-videos", "showVideos", @_updateQuickLinks, null
-      #@settings.bindProperty Settings.BindingDirection.IN, "show-places", "showPlaces", @_refreshPlacesAndRecent, null
-      @showPlaces = false
+      @settings.bindProperty Settings.BindingDirection.IN, "show-places", "showPlaces", @_refreshPlacesAndRecent, null
       @settings.bindProperty Settings.BindingDirection.IN, "activate-on-hover", "activateOnHover", @_updateActivateOnHover, null
       @_updateActivateOnHover()
       @menu.actor.add_style_class_name "menu-background"
+      @settings.bindProperty Settings.BindingDirection.IN, "menu-icon", "menuIcon", @_updateIconAndLabel, null
+      @settings.bindProperty Settings.BindingDirection.IN, "menu-label", "menuLabel", @_updateIconAndLabel, null
+      @settings.bindProperty Settings.BindingDirection.IN, "all-programs-label", "allProgramsLabel", null, null
+      @settings.bindProperty Settings.BindingDirection.IN, "favorites-label", "favoritesLabel", null, null
+      @settings.bindProperty Settings.BindingDirection.IN, "shutdown-label", "shutdownLabel", null, null
       @_updateIconAndLabel()
       @_searchInactiveIcon = new St.Icon(
         style_class: "menu-search-entry-icon"
@@ -62,41 +93,60 @@ class MyApplet
       @menuIsOpening = false
       @RecentManager = new DocInfo.DocManager()
       @_display()
-      @menu.connect "open-state-changed", @_onOpenStateChanged
-      appsys.connect "installed-changed", @_refreshApps
-      AppFavorites.getAppFavorites().connect "changed", @_refreshFavs
+      @menu.connect "open-state-changed", Lang.bind(this, @_onOpenStateChanged)
+      appsys.connect "installed-changed", Lang.bind(this, @_refreshApps)
+      AppFavorites.getAppFavorites().connect "changed", Lang.bind(this, @_refreshFavs)
       @settings.bindProperty Settings.BindingDirection.IN, "hover-delay", "hover_delay_ms", @_update_hover_delay, null
       @_update_hover_delay()
-      @showQuicklinks = true
-      #@settings.bindProperty Settings.BindingDirection.IN, "show-quicklinks", "showQuicklinks", @_updateQuickLinksView, null
+      @settings.bindProperty Settings.BindingDirection.IN, "show-quicklinks", "showQuicklinks", @_updateQuickLinksView, null
       @_updateQuickLinksView()
       @settings.bindProperty Settings.BindingDirection.IN, "show-quicklinks-shutdown-menu", "showQuicklinksShutdownMenu", @_updateQuickLinksShutdownView, null
       @_updateQuickLinksShutdownView()
-      Main.placesManager.connect "places-updated", @_refreshApps
-      @RecentManager.connect "changed", @_refreshApps
+      Main.placesManager.connect "places-updated", Lang.bind(this, @_refreshApps)
+      @RecentManager.connect "changed", Lang.bind(this, @_refreshApps)
       @_fileFolderAccessActive = false
       @_pathCompleter = new Gio.FilenameCompleter()
       @_pathCompleter.set_dirs_only false
       @lastAcResults = new Array()
       @settings.bindProperty Settings.BindingDirection.IN, "search-filesystem", "searchFilesystem", null, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-0", "quicklink_0", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-1", "quicklink_1", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-2", "quicklink_2", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-3", "quicklink_3", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-4", "quicklink_4", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-5", "quicklink_5", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-6", "quicklink_6", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-7", "quicklink_7", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-8", "quicklink_8", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-9", "quicklink_9", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-10", "quicklink_10", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-11", "quicklink_11", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-12", "quicklink_12", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-13", "quicklink_13", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-14", "quicklink_14", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-15", "quicklink_15", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-16", "quicklink_16", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-17", "quicklink_17", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-18", "quicklink_18", @_updateQuickLinks, null
+      @settings.bindProperty Settings.BindingDirection.IN, "quicklink-19", "quicklink_19", @_updateQuickLinks, null
       @settings.bindProperty Settings.BindingDirection.IN, "quicklink-options", "quicklinkOptions", @_updateQuickLinks, null
       @_updateQuickLinks()
     catch e
       global.logError e
     return
 
-  openMenu: =>
+  openMenu: ->
     @menu.open true
     return
 
-  _updateActivateOnHover: =>
+  _updateActivateOnHover: ->
     if @_openMenuId
       @actor.disconnect @_openMenuId
       @_openMenuId = 0
-    @_openMenuId = @actor.connect("enter-event", @openMenu)  if @activateOnHover
+    @_openMenuId = @actor.connect("enter-event", Lang.bind(this, @openMenu))  if @activateOnHover
     return
 
-  _updateQuickLinksView: =>
+  _updateQuickLinksView: ->
     @menu.showQuicklinks = @showQuicklinks
     if @menu.showQuicklinks
       @rightButtonsBox.actor.show()
@@ -104,7 +154,7 @@ class MyApplet
       @rightButtonsBox.actor.hide()
     return
 
-  _updateQuickLinksShutdownView: =>
+  _updateQuickLinksShutdownView: ->
     @menu.showQuicklinksShutdownMenu = @showQuicklinksShutdownMenu
     if @menu.showQuicklinksShutdownMenu
       @rightButtonsBox.shutdown.actor.show()
@@ -121,76 +171,28 @@ class MyApplet
     @favsBox.style = "min-height: " + (@rightButtonsBox.actor.get_height() - 100) + "px;min-width: 235px;"
     return
 
-  _updateQuickLinks: =>
-    
+  _updateQuickLinks: ->
     @menu.quicklinks = []
-
-    switch @showPersonal
-      when "link" then @menu.quicklinks.push "Home,folder-home,nemo" 
-      when "menu" then @menu.quicklinks.push "Home,folder-home,nemo"
-     
-    switch @showDocuments
-      when "link" then @menu.quicklinks.push "Documents,folder-documents,nemo Documents" 
-      when "menu" then @menu.quicklinks.push "Documents,folder-documents,nemo Documents"
-     
-    switch @showPictures
-      when "link" then @menu.quicklinks.push "Pictures,folder-pictures,nemo Pictures"
-      when "menu" then @menu.quicklinks.push "Pictures,folder-pictures,nemo Pictures"
-
-    switch @showMusic
-      when "link" then @menu.quicklinks.push "Music,folder-music,nemo Music"
-      when "menu" then @menu.quicklinks.push "Music,folder-music,nemo Music"
-   
-    switch @showVideos
-      when "link" then @menu.quicklinks.push "Videos,folder-videos,nemo Videos"
-      when "menu" then @menu.quicklinks.push "Videos,folder-videos,nemo Videos"
-      
-    switch @showDownloads
-      when "link" then @menu.quicklinks.push "Downloads,folder-downloads,nemo Downloads"
-      when "menu" then @menu.quicklinks.push "Downloads,folder-downloads,nemo Downloads"
-      
-    @menu.quicklinks.push "separator"
-    
-    switch @showGames
-      when "link" then @menu.quicklinks.push "Games,games,nemo Games"
-      when "menu" then @menu.quicklinks.push "Games,games,nemo Games"
-
-    switch @showComputer
-      when "link" then @menu.quicklinks.push "Computer,computer,nemo computer:///"
-      when "menu" then @menu.quicklinks.push "Computer,computer,nemo computer:///"
-
-    @menu.quicklinks.push "Software Manager,package-manager,gksu mintinstall"
-    # switch @showComputer
-    #   when "link" then @menu.quicklinks.push "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info"
-    #   when "menu" then @menu.quicklinks.push "System Info,/usr/share/icons/hicolor/scalable/categories/cs-details.svg,cinnamon-settings info"
-            
-    if @showConnection
-      @menu.quicklinks.push "Connect To,network,cinnamon-settings network"
-    
-    if @showNetwork
-      @menu.quicklinks.push "Network,network,nemo network:///"
-
-    @menu.quicklinks.push "separator"
-
-    switch @showSettings
-      when "link" then @menu.quicklinks.push "Control Panel,control-center2,cinnamon-settings" 
-      when "menu" then @menu.quicklinks.push "Control Panel,control-center2,cinnamon-settings" 
-      
-    if @showDevices
-      @menu.quicklinks.push "Printers,printers,system-config-printer"
-    
-    if @showDefaults
-      @menu.quicklinks.push "Default Programs,network,cinnamon-settings default"
-      
-    if @showHelp
-      @menu.quicklinks.push "Help,help,yelp" 
-      
-    if @showRun      
-      @menu.quicklinks.push "Terminal,terminal,gnome-terminal"
-    
-    if @showQuicklinksShutdownMenu
-      @menu.quicklinks.push "separator"
-
+    @menu.quicklinks[0] = @quicklink_0
+    @menu.quicklinks[1] = @quicklink_1
+    @menu.quicklinks[2] = @quicklink_2
+    @menu.quicklinks[3] = @quicklink_3
+    @menu.quicklinks[4] = @quicklink_4
+    @menu.quicklinks[5] = @quicklink_5
+    @menu.quicklinks[6] = @quicklink_6
+    @menu.quicklinks[7] = @quicklink_7
+    @menu.quicklinks[8] = @quicklink_8
+    @menu.quicklinks[9] = @quicklink_9
+    @menu.quicklinks[10] = @quicklink_10
+    @menu.quicklinks[11] = @quicklink_11
+    @menu.quicklinks[12] = @quicklink_12
+    @menu.quicklinks[13] = @quicklink_13
+    @menu.quicklinks[14] = @quicklink_14
+    @menu.quicklinks[15] = @quicklink_15
+    @menu.quicklinks[16] = @quicklink_16
+    @menu.quicklinks[17] = @quicklink_17
+    @menu.quicklinks[18] = @quicklink_18
+    @menu.quicklinks[19] = @quicklink_19
     @menu.quicklinkOptions = @quicklinkOptions
     @rightButtonsBox.addItems()
     @rightButtonsBox._update_quicklinks @quicklinkOptions
@@ -198,30 +200,30 @@ class MyApplet
     @favsBox.style = "min-height: " + (@rightButtonsBox.actor.get_height() - 100) + "px;min-width: 235px;"
     return
 
-  _update_hover_delay: =>
+  _update_hover_delay: ->
     @hover_delay = @hover_delay_ms / 1000
     return
 
-  on_orientation_changed: (orientation) =>
+  on_orientation_changed: (orientation) ->
     @menu.destroy()
     @menu = new Applet.AppletPopupMenu(this, orientation)
     @menuManager.addMenu @menu
     @menu.actor.add_style_class_name "menu-background"
-    @menu.connect "open-state-changed", @_onOpenStateChanged
+    @menu.connect "open-state-changed", Lang.bind(this, @_onOpenStateChanged)
     @_display()
     @_updateQuickLinksShutdownView()
     @_updateQuickLinks()
     return
 
-  _launch_editor: =>
+  _launch_editor: ->
     Util.spawnCommandLine "cinnamon-menu-editor"
     return
 
-  on_applet_clicked: (event) =>
+  on_applet_clicked: (event) ->
     @menu.toggle()
     return
 
-  _onSourceKeyPress: (actor, event) =>
+  _onSourceKeyPress: (actor, event) ->
     symbol = event.get_key_symbol()
     if symbol is Clutter.KEY_space or symbol is Clutter.KEY_Return
       @menu.toggle()
@@ -236,7 +238,7 @@ class MyApplet
     else
       false
 
-  _onOpenStateChanged: (menu, open) =>
+  _onOpenStateChanged: (menu, open) ->
     if open
       @menuIsOpening = true
       @actor.add_style_pseudo_class "active"
@@ -260,24 +262,22 @@ class MyApplet
       @_clearAllSelections()
     return
 
-  destroy: =>
+  destroy: ->
     @actor._delegate = null
     @menu.destroy()
     @actor.destroy()
     @emit "destroy"
     return
 
-  _updateIconAndLabel: =>
-    menuLabel = ""
-    menuIcon = ".local/share/cinnamon/applets/Cin7Menu@darkoverlordofdata.com/icon.png"
-    @set_applet_label menuLabel
+  _updateIconAndLabel: ->
+    @set_applet_label @menuLabel
     try
-      @set_applet_icon_path menuIcon
+      @set_applet_icon_path @menuIcon
     catch e
-      global.logWarning "Could not load icon file \"" + menuIcon + "\" for menu button"
+      global.logWarning "Could not load icon file \"" + @menuIcon + "\" for menu button"
     return
 
-  _onMenuKeyPress: (actor, event) =>
+  _onMenuKeyPress: (actor, event) ->
     symbol = event.get_key_symbol()
     item_actor = undefined
     index = 0
@@ -363,8 +363,8 @@ class MyApplet
     item_actor._delegate.emit "enter-event"
     true
 
-  _addEnterEvent: (button, callback) =>
-    _callback = =>
+  _addEnterEvent: (button, callback) ->
+    _callback = Lang.bind(this, ->
       parent = button.actor.get_parent()
       if @_activeContainer isnt @applicationsBox and parent isnt @_activeContainer
         @_previousTreeItemIndex = @_selectedItemIndex
@@ -384,20 +384,20 @@ class MyApplet
       @_selectedItemIndex = @_activeContainer._vis_iter.getAbsoluteIndexOfChild(@_activeActor)
       callback()
       return
-
+    )
     button.connect "enter-event", _callback
     button.actor.connect "enter-event", _callback
     return
 
-  _clearPrevAppSelection: (actor) =>
+  _clearPrevAppSelection: (actor) ->
     @_previousSelectedActor.style_class = "menu-application-button"  if @_previousSelectedActor and @_previousSelectedActor isnt actor
     return
 
-  _clearPrevCatSelection: (actor) =>
+  _clearPrevCatSelection: (actor) ->
     @_previousSelectedActor.style_class = "menu-category-button"  if @_previousSelectedActor and @_previousSelectedActor isnt actor
     return
 
-  _appletStyles: (pane) =>
+  _appletStyles: (pane) ->
     favsWidth = (@favsBox.get_allocation_box().x2 - @favsBox.get_allocation_box().x1)
     scrollWidth = @searchBox.get_width() + @rightButtonsBox.actor.get_width()
     @searchEntry.style = "width:" + favsWidth + "px"
@@ -407,7 +407,7 @@ class MyApplet
     @categoriesScrollBox.style = "width: " + ((scrollWidth) * 0.45) + "px;height: " + scrollBoxHeight + "px;"
     return
 
-  _refreshApps: =>
+  _refreshApps: ->
     @applicationsBox.destroy_all_children()
     @_applicationsButtons = new Array()
     @_placesButtons = new Array()
@@ -415,14 +415,14 @@ class MyApplet
     @_applicationsBoxWidth = 0
     @categoriesBox.destroy_all_children()
     @_allAppsCategoryButton = new CategoryButton(null)
-    @_addEnterEvent @_allAppsCategoryButton, =>
+    @_addEnterEvent @_allAppsCategoryButton, Lang.bind(this, ->
       unless @searchActive
         @_allAppsCategoryButton.isHovered = true
         @_allAppsCategoryButton.actor.style_class = "menu-category-button-selected"
         if @hover_delay > 0
           Tweener.addTween this,
             time: @hover_delay
-            onComplete: =>
+            onComplete: ->
               if @_allAppsCategoryButton.isHovered
                 @_clearPrevCatSelection @_allAppsCategoryButton.actor
                 @_select_category null, @_allAppsCategoryButton
@@ -434,13 +434,13 @@ class MyApplet
           @_clearPrevCatSelection @_allAppsCategoryButton.actor
           @_select_category null, @_allAppsCategoryButton
       return
-    
-    @_allAppsCategoryButton.actor.connect "leave-event", =>
+    )
+    @_allAppsCategoryButton.actor.connect "leave-event", Lang.bind(this, ->
       @_allAppsCategoryButton.actor.style_class = "menu-category-button"  unless @searchActive
       @_previousSelectedActor = @_allAppsCategoryButton.actor
       @_allAppsCategoryButton.isHovered = false
       return
-    
+    )
     @categoriesBox.add_actor @_allAppsCategoryButton.actor
     trees = [appsys.get_tree()]
     for i of trees
@@ -450,43 +450,45 @@ class MyApplet
       nextType = undefined
       until (nextType = iter.next()) is CMenu.TreeItemType.INVALID
         if nextType is CMenu.TreeItemType.DIRECTORY
-          do (dir = iter.get_directory()) =>
-            return  if dir.get_is_nodisplay()
-            @applicationsByCategory[dir.get_menu_id()] = new Array()
-            @_loadCategory dir
-            if @applicationsByCategory[dir.get_menu_id()].length > 0
-              categoryButton = new CategoryButton(dir)
-              @_addEnterEvent categoryButton, =>
-                unless @searchActive
-                  categoryButton.isHovered = true
-                  categoryButton.actor.style_class = "menu-category-button-selected"
-                  if @hover_delay > 0
-                    Tweener.addTween this,
-                      time: @hover_delay
-                      onComplete: =>
-                        if categoryButton.isHovered
-                          @_clearPrevCatSelection categoryButton.actor
-                          @_select_category dir, categoryButton
-                        else
-                          categoryButton.actor.style_class = "menu-category-button"
-                        return
+          dir = iter.get_directory()
+          continue  if dir.get_is_nodisplay()
+          @applicationsByCategory[dir.get_menu_id()] = new Array()
+          @_loadCategory dir
+          if @applicationsByCategory[dir.get_menu_id()].length > 0
+            categoryButton = new CategoryButton(dir)
+            @_addEnterEvent categoryButton, Lang.bind(this, ->
+              unless @searchActive
+                categoryButton.isHovered = true
+                categoryButton.actor.style_class = "menu-category-button-selected"
+                if @hover_delay > 0
+                  Tweener.addTween this,
+                    time: @hover_delay
+                    onComplete: ->
+                      if categoryButton.isHovered
+                        @_clearPrevCatSelection categoryButton.actor
+                        @_select_category dir, categoryButton
+                      else
+                        categoryButton.actor.style_class = "menu-category-button"
+                      return
 
-                  else
-                    @_clearPrevCatSelection categoryButton.actor
-                    @_select_category dir, categoryButton
-                return
-            
-              categoryButton.actor.connect "leave-event", =>
-                categoryButton.actor.style_class = "menu-category-button"  unless @searchActive
-                @_previousSelectedActor = categoryButton.actor
-                categoryButton.isHovered = false
-                return
-            
-              @categoriesBox.add_actor categoryButton.actor
-              
-    @_applicationsButtons.sort (a, b) => a.app.get_name().toLowerCase() > b.app.get_name().toLowerCase()
+                else
+                  @_clearPrevCatSelection categoryButton.actor
+                  @_select_category dir, categoryButton
+              return
+            )
+            categoryButton.actor.connect "leave-event", Lang.bind(this, ->
+              categoryButton.actor.style_class = "menu-category-button"  unless @searchActive
+              @_previousSelectedActor = categoryButton.actor
+              categoryButton.isHovered = false
+              return
+            )
+            @categoriesBox.add_actor categoryButton.actor
+    @_applicationsButtons.sort (a, b) ->
+      sr = a.app.get_name().toLowerCase() > b.app.get_name().toLowerCase()
+      sr
 
     i = 0
+
     while i < @_applicationsButtons.length
       @applicationsBox.add_actor @_applicationsButtons[i].actor
       @_applicationsButtons[i].actor.realize()
@@ -494,13 +496,13 @@ class MyApplet
       i++
     if @showPlaces
       @placesButton = new PlaceCategoryButton()
-      @_addEnterEvent @placesButton, =>
+      @_addEnterEvent @placesButton, Lang.bind(this, ->
         unless @searchActive
           @placesButton.isHovered = true
           @placesButton.actor.style_class = "menu-category-button-selected"
           Tweener.addTween this,
             time: @hover_delay
-            onComplete: =>
+            onComplete: ->
               if @placesButton.isHovered
                 @_clearPrevCatSelection @placesButton
                 @_displayButtons null, -1
@@ -508,13 +510,13 @@ class MyApplet
 
         @_scrollToCategoryButton @placesButton
         return
-      
-      @placesButton.actor.connect "leave-event", =>
+      )
+      @placesButton.actor.connect "leave-event", Lang.bind(this, ->
         @placesButton.actor.style_class = "menu-category-button"  unless @searchActive
         @_previousSelectedActor = @placesButton.actor
         @placesButton.isHovered = false
         return
-      
+      )
       @categoriesBox.add_actor @placesButton.actor
       bookmarks = @_listBookmarks()
       devices = @_listDevices()
@@ -523,32 +525,32 @@ class MyApplet
 
       while i < places.length
         place = places[i]
-        do (button = new PlaceButton(this, place, place.name)) =>
-          @_addEnterEvent button, =>
-            @_clearPrevAppSelection button.actor
-            button.actor.style_class = "menu-application-button-selected"
-            @_scrollToButton button
-            @selectedAppDescription.set_text button.place.id.slice(16)
-            return
-          
-          button.actor.connect "leave-event", =>
-            button.actor.style_class = "menu-application-button"
-            @_previousSelectedActor = button.actor
-            @selectedAppDescription.set_text ""
-            return
-          
-          @_placesButtons.push button
-          @applicationsBox.add_actor button.actor
+        button = new PlaceButton(this, place, place.name)
+        @_addEnterEvent button, Lang.bind(this, ->
+          @_clearPrevAppSelection button.actor
+          button.actor.style_class = "menu-application-button-selected"
+          @_scrollToButton button
+          @selectedAppDescription.set_text button.place.id.slice(16)
+          return
+        )
+        button.actor.connect "leave-event", Lang.bind(this, ->
+          button.actor.style_class = "menu-application-button"
+          @_previousSelectedActor = button.actor
+          @selectedAppDescription.set_text ""
+          return
+        )
+        @_placesButtons.push button
+        @applicationsBox.add_actor button.actor
         i++
     if @showRecent
       @recentButton = new RecentCategoryButton()
-      @_addEnterEvent @recentButton, =>
+      @_addEnterEvent @recentButton, Lang.bind(this, ->
         unless @searchActive
           @recentButton.isHovered = true
           @recentButton.actor.style_class = "menu-category-button-selected"
           Tweener.addTween this,
             time: @hover_delay
-            onComplete: =>
+            onComplete: ->
               if @recentButton.isHovered
                 @_clearPrevCatSelection @recentButton.actor
                 @_displayButtons null, null, -1
@@ -556,58 +558,58 @@ class MyApplet
 
         @_scrollToCategoryButton @recentButton
         return
-      
-      @recentButton.actor.connect "leave-event", =>
+      )
+      @recentButton.actor.connect "leave-event", Lang.bind(this, ->
         @recentButton.actor.style_class = "menu-category-button"  unless @searchActive
         @_previousSelectedActor = @recentButton.actor
         @recentButton.isHovered = false
         return
-      
+      )
       @categoriesBox.add_actor @recentButton.actor
       id = 0
 
       while id < MAX_RECENT_FILES and id < @RecentManager._infosByTimestamp.length
-        do (button = new RecentButton(this, @RecentManager._infosByTimestamp[id])) =>
-          @_addEnterEvent button, =>
-            @_clearPrevAppSelection button.actor
-            button.actor.style_class = "menu-application-button-selected"
-            @_scrollToButton button
-            @selectedAppDescription.set_text button.file.uri.slice(7)
-            return
-          
-          button.actor.connect "leave-event", =>
-            button.actor.style_class = "menu-application-button"
-            @_previousSelectedActor = button.actor
-            @selectedAppTitle.set_text ""
-            @selectedAppDescription.set_text ""
-            return
-        
-          @_recentButtons.push button
-          @applicationsBox.add_actor button.actor
+        button = new RecentButton(this, @RecentManager._infosByTimestamp[id])
+        @_addEnterEvent button, Lang.bind(this, ->
+          @_clearPrevAppSelection button.actor
+          button.actor.style_class = "menu-application-button-selected"
+          @_scrollToButton button
+          @selectedAppDescription.set_text button.file.uri.slice(7)
+          return
+        )
+        button.actor.connect "leave-event", Lang.bind(this, ->
+          button.actor.style_class = "menu-application-button"
+          @_previousSelectedActor = button.actor
+          @selectedAppTitle.set_text ""
+          @selectedAppDescription.set_text ""
+          return
+        )
+        @_recentButtons.push button
+        @applicationsBox.add_actor button.actor
         id++
       if @RecentManager._infosByTimestamp.length > 0
         button = new RecentClearButton(this)
-        @_addEnterEvent button, =>
+        @_addEnterEvent button, Lang.bind(this, ->
           @_clearPrevAppSelection button.actor
           button.actor.style_class = "menu-application-button-selected"
           @_scrollToButton button
           return
-        
-        button.actor.connect "leave-event", =>
+        )
+        button.actor.connect "leave-event", Lang.bind(this, ->
           button.actor.style_class = "menu-application-button"
           @_previousSelectedActor = button.actor
           return
-        
+        )
         @_recentButtons.push button
         @applicationsBox.add_actor button.actor
     @_setCategoriesButtonActive not @searchActive
     return
 
-  _refreshFavs: =>
-    @favsBox.get_children().forEach (child) =>
+  _refreshFavs: ->
+    @favsBox.get_children().forEach Lang.bind(this, (child) ->
       child.destroy()
       return
-    
+    )
     favoritesBox = new FavoritesBox()
     @favsBox.add_actor favoritesBox.actor,
       y_align: St.Align.END
@@ -623,34 +625,34 @@ class MyApplet
       app = appSys.lookup_app(launchers[i])
       app = appSys.lookup_settings_app(launchers[i])  unless app
       if app
-        do (button = new FavoritesButton(this, app, launchers.length, @favorite_icon_size)) =>
-          @_favoritesButtons[app] = button
-          favoritesBox.actor.add_actor button.actor,
-            y_align: St.Align.END
-            y_fill: false
+        button = new FavoritesButton(this, app, launchers.length, @favorite_icon_size)
+        @_favoritesButtons[app] = button
+        favoritesBox.actor.add_actor button.actor,
+          y_align: St.Align.END
+          y_fill: false
 
-          favoritesBox.actor.add_actor button.menu.actor,
-            y_align: St.Align.END
-            y_fill: false
+        favoritesBox.actor.add_actor button.menu.actor,
+          y_align: St.Align.END
+          y_fill: false
 
-          button.actor.connect "enter-event", =>
-            @selectedAppTitle.set_text button.app.get_name()
-            if button.app.get_description()
-              @selectedAppDescription.set_text button.app.get_description()
-            else
-              @selectedAppDescription.set_text ""
-            return
-          
-          button.actor.connect "leave-event", =>
-            @selectedAppTitle.set_text ""
+        button.actor.connect "enter-event", Lang.bind(this, ->
+          @selectedAppTitle.set_text button.app.get_name()
+          if button.app.get_description()
+            @selectedAppDescription.set_text button.app.get_description()
+          else
             @selectedAppDescription.set_text ""
-            return
-        
+          return
+        )
+        button.actor.connect "leave-event", Lang.bind(this, ->
+          @selectedAppTitle.set_text ""
+          @selectedAppDescription.set_text ""
+          return
+        )
         ++j
       ++i
     return
 
-  _loadCategory: (dir, top_dir) =>
+  _loadCategory: (dir, top_dir) ->
     iter = dir.iter()
     dupe = false
     nextType = undefined
@@ -662,16 +664,13 @@ class MyApplet
           app = appsys.lookup_app_by_tree_entry(entry)
           dupe = @find_dupe(app)
           unless dupe
-            do (applicationButton = new ApplicationButton(this, app)) =>
-              # applicationButton = new ApplicationButton(this, app)
-              applicationButton.actor.connect "realize", @_onApplicationButtonRealized
-              
-              applicationButton.actor.connect "leave-event", () => @_appLeaveEvent(applicationButton)
-              @_addEnterEvent applicationButton, () => @_appEnterEvent(applicationButton)
-              
-              @_applicationsButtons.push applicationButton
-              applicationButton.category.push top_dir.get_menu_id()
-              @applicationsByCategory[top_dir.get_menu_id()].push app.get_name()
+            applicationButton = new ApplicationButton(this, app)
+            applicationButton.actor.connect "realize", Lang.bind(this, @_onApplicationButtonRealized)
+            applicationButton.actor.connect "leave-event", Lang.bind(this, @_appLeaveEvent, applicationButton)
+            @_addEnterEvent applicationButton, Lang.bind(this, @_appEnterEvent, applicationButton)
+            @_applicationsButtons.push applicationButton
+            applicationButton.category.push top_dir.get_menu_id()
+            @applicationsByCategory[top_dir.get_menu_id()].push app.get_name()
           else
             i = 0
 
@@ -685,14 +684,14 @@ class MyApplet
         @_loadCategory subdir, top_dir
     return
 
-  _appLeaveEvent: (applicationButton) =>
+  _appLeaveEvent: (a, b, applicationButton) ->
     @_previousSelectedActor = applicationButton.actor
     applicationButton.actor.style_class = "menu-application-button"
     @selectedAppTitle.set_text ""
     @selectedAppDescription.set_text ""
     return
 
-  _appEnterEvent: (applicationButton) =>
+  _appEnterEvent: (applicationButton) ->
     @selectedAppTitle.set_text applicationButton.app.get_name()
     if applicationButton.app.get_description()
       @selectedAppDescription.set_text applicationButton.app.get_description()
@@ -703,7 +702,7 @@ class MyApplet
     @_scrollToButton applicationButton
     return
 
-  find_dupe: (app) =>
+  find_dupe: (app) ->
     ret = false
     i = 0
 
@@ -714,7 +713,7 @@ class MyApplet
       i++
     ret
 
-  _scrollToButton: (button) =>
+  _scrollToButton: (button) ->
     current_scroll_value = @applicationsScrollBox.get_vscroll_bar().get_adjustment().get_value()
     box_height = @applicationsScrollBox.get_allocation_box().y2 - @applicationsScrollBox.get_allocation_box().y1
     new_scroll_value = current_scroll_value
@@ -723,7 +722,7 @@ class MyApplet
     @applicationsScrollBox.get_vscroll_bar().get_adjustment().set_value new_scroll_value  unless new_scroll_value is current_scroll_value
     return
 
-  _scrollToCategoryButton: (button) =>
+  _scrollToCategoryButton: (button) ->
     current_scroll_value = @categoriesScrollBox.get_vscroll_bar().get_adjustment().get_value()
     box_height = @categoriesScrollBox.get_allocation_box().y2 - @categoriesScrollBox.get_allocation_box().y1
     new_scroll_value = current_scroll_value
@@ -732,7 +731,7 @@ class MyApplet
     @categoriesScrollBox.get_vscroll_bar().get_adjustment().set_value new_scroll_value  unless new_scroll_value is current_scroll_value
     return
 
-  _display: =>
+  _display: ->
     @_activeContainer = null
     @_activeActor = null
     section = new PopupMenu.PopupMenuSection()
@@ -752,8 +751,8 @@ class MyApplet
     @searchEntry.set_secondary_icon @_searchInactiveIcon
     @searchActive = false
     @searchEntryText = @searchEntry.clutter_text
-    @searchEntryText.connect "text-changed", @_onSearchTextChanged
-    @searchEntryText.connect "key-press-event", @_onMenuKeyPress
+    @searchEntryText.connect "text-changed", Lang.bind(this, @_onSearchTextChanged)
+    @searchEntryText.connect "key-press-event", Lang.bind(this, @_onMenuKeyPress)
     @_previousSearchPattern = ""
     @selectedAppBox = new St.BoxLayout(
       style_class: "menu-selected-app-box"
@@ -792,33 +791,33 @@ class MyApplet
     )
     @applicationsScrollBox.set_width 244
     @a11y_settings = new Gio.Settings(schema: "org.gnome.desktop.a11y.applications")
-    @a11y_settings.connect "changed::screen-magnifier-enabled", @_updateVFade
+    @a11y_settings.connect "changed::screen-magnifier-enabled", Lang.bind(this, @_updateVFade)
     @_updateVFade()
     @settings.bindProperty Settings.BindingDirection.IN, "enable-autoscroll", "autoscroll_enabled", @_update_autoscroll, null
     @_update_autoscroll()
     @settings.bindProperty Settings.BindingDirection.IN, "favorite-icon-size", "favorite_icon_size", @_refreshFavs, null
-    do (vscroll = @applicationsScrollBox.get_vscroll_bar()) =>
-      vscroll.connect "scroll-start", =>
-        @menu.passEvents = true
-        return
-      
-      vscroll.connect "scroll-stop", =>
-        @menu.passEvents = false
-        return
-    
-    do (vscroll = @categoriesScrollBox.get_vscroll_bar()) =>
-      vscroll.connect "scroll-start", =>
-        @menu.passEvents = true
-        return
-      
-      vscroll.connect "scroll-stop", =>
-        @menu.passEvents = false
-        return
-    
+    vscroll = @applicationsScrollBox.get_vscroll_bar()
+    vscroll.connect "scroll-start", Lang.bind(this, ->
+      @menu.passEvents = true
+      return
+    )
+    vscroll.connect "scroll-stop", Lang.bind(this, ->
+      @menu.passEvents = false
+      return
+    )
+    vscroll = @categoriesScrollBox.get_vscroll_bar()
+    vscroll.connect "scroll-start", Lang.bind(this, ->
+      @menu.passEvents = true
+      return
+    )
+    vscroll.connect "scroll-stop", Lang.bind(this, ->
+      @menu.passEvents = false
+      return
+    )
     @_refreshFavs()
     @separator = new PopupMenu.PopupSeparatorMenuItem()
     @separator.actor.set_style "padding: 0em 1em;"
-    @appsButton = new AllProgramsItem(_("All Programs"), "forward", this, false)
+    @appsButton = new AllProgramsItem(_(@allProgramsLabel), "forward", this, false)
     @leftPaneBox = new St.BoxLayout(
       style_class: "menu-favorites-box"
       vertical: true
@@ -857,27 +856,27 @@ class MyApplet
     @mainBox.add_actor @leftPaneBox
     @mainBox.add_actor @rightButtonsBox.actor
     section.actor.add_actor @mainBox
-    Mainloop.idle_add =>
+    Mainloop.idle_add Lang.bind(this, ->
       @_clearAllSelections()
       return
-    
+    )
     return
 
-  switchPanes: (pane) =>
+  switchPanes: (pane) ->
     if pane is "apps"
       @leftPane.set_child @appsBox
-      @appsButton.label.set_text " " + _("Back")
+      @appsButton.label.set_text " " + _(@favoritesLabel)
       @rightButtonsBox.actor.hide()
       @_appletStyles "apps"
     else
       @leftPane.set_child @favsBox
-      @appsButton.label.set_text " " + _("All Programs")
+      @appsButton.label.set_text " " + _(@allProgramsLabel)
       @rightButtonsBox.actor.show()  if @menu.showQuicklinks
       @_appletStyles "favs"
-    @rightButtonsBox.shutdown.label.set_text _("Shutdown")
+    @rightButtonsBox.shutdown.label.set_text _(@shutdownLabel)
     return
 
-  _updateVFade: =>
+  _updateVFade: ->
     mag_on = @a11y_settings.get_boolean("screen-magnifier-enabled")
     if mag_on
       @applicationsScrollBox.style_class = "menu-applications-scrollbox"
@@ -885,11 +884,11 @@ class MyApplet
       @applicationsScrollBox.style_class = "vfade menu-applications-scrollbox"
     return
 
-  _update_autoscroll: =>
+  _update_autoscroll: ->
     @applicationsScrollBox.set_auto_scrolling @autoscroll_enabled
     return
 
-  _clearAllSelections: =>
+  _clearAllSelections: ->
     actors = @applicationsBox.get_children()
     i = 0
 
@@ -908,7 +907,7 @@ class MyApplet
       i++
     return
 
-  _select_category: (dir, categoryButton) =>
+  _select_category: (dir, categoryButton) ->
     if dir
       @_displayButtons @_listApplications(dir.get_menu_id())
     else
@@ -917,7 +916,7 @@ class MyApplet
     @_scrollToCategoryButton categoryButton
     return
 
-  closeApplicationsContextMenus: (excludeApp, animate) =>
+  closeApplicationsContextMenus: (excludeApp, animate) ->
     for app of @_applicationsButtons
       if app isnt excludeApp and @_applicationsButtons[app].menu.isOpen
         if animate
@@ -926,24 +925,24 @@ class MyApplet
           @_applicationsButtons[app].closeMenu()
     return
 
-  _onApplicationButtonRealized: (actor) =>
+  _onApplicationButtonRealized: (actor) ->
     if actor.get_width() > @_applicationsBoxWidth
       @_applicationsBoxWidth = actor.get_width()
       @applicationsBox.set_width @_applicationsBoxWidth + 20
     return
 
-  _displayButtons: (appCategory, places, recent, apps, autocompletes) =>
+  _displayButtons: (appCategory, places, recent, apps, autocompletes) ->
     innerapps = @applicationsBox.get_children()
     for i of innerapps
       innerapps[i].hide()
     if appCategory
       if appCategory is "all"
-        @_applicationsButtons.forEach (item, index) =>
+        @_applicationsButtons.forEach (item, index) ->
           item.actor.show()  unless item.actor.visible
           return
 
       else
-        @_applicationsButtons.forEach (item, index) =>
+        @_applicationsButtons.forEach (item, index) ->
           unless item.category.indexOf(appCategory) is -1
             item.actor.show()  unless item.actor.visible
           else
@@ -960,13 +959,13 @@ class MyApplet
           @_applicationsButtons[i].actor.hide()  if @_applicationsButtons[i].actor.visible
         i++
     else
-      @_applicationsButtons.forEach (item, index) =>
+      @_applicationsButtons.forEach (item, index) ->
         item.actor.hide()  if item.actor.visible
         return
 
     if places
       if places is -1
-        @_placesButtons.forEach (item, index) =>
+        @_placesButtons.forEach (item, index) ->
           item.actor.show()
           return
 
@@ -980,13 +979,13 @@ class MyApplet
             @_placesButtons[i].actor.hide()  if @_placesButtons[i].actor.visible
           i++
     else
-      @_placesButtons.forEach (item, index) =>
+      @_placesButtons.forEach (item, index) ->
         item.actor.hide()  if item.actor.visible
         return
 
     if recent
       if recent is -1
-        @_recentButtons.forEach (item, index) =>
+        @_recentButtons.forEach (item, index) ->
           item.actor.show()  unless item.actor.visible
           return
 
@@ -1000,7 +999,7 @@ class MyApplet
             @_recentButtons[i].actor.hide()  if @_recentButtons[i].actor.visible
           i++
     else
-      @_recentButtons.forEach (item, index) =>
+      @_recentButtons.forEach (item, index) ->
         item.actor.hide()  if item.actor.visible
         return
 
@@ -1008,20 +1007,17 @@ class MyApplet
       i = 0
 
       while i < autocompletes.length
-        do (button = new TransientButton(this, autocompletes[i])) =>
-          # button = new TransientButton(this, autocompletes[i])
-          button.actor.connect "realize", @_onApplicationButtonRealized
-          
-          button.actor.connect "leave-event", () => @_appLeaveEvent(button)
-          @_addEnterEvent button, () => @_appEnterEvent(button)
-          
-          @_transientButtons.push button
-          @applicationsBox.add_actor button.actor
-          button.actor.realize()
+        button = new TransientButton(this, autocompletes[i])
+        button.actor.connect "realize", Lang.bind(this, @_onApplicationButtonRealized)
+        button.actor.connect "leave-event", Lang.bind(this, @_appLeaveEvent, button)
+        @_addEnterEvent button, Lang.bind(this, @_appEnterEvent, button)
+        @_transientButtons.push button
+        @applicationsBox.add_actor button.actor
+        button.actor.realize()
         i++
     return
 
-  _setCategoriesButtonActive: (active) =>
+  _setCategoriesButtonActive: (active) ->
     try
       categoriesButtons = @categoriesBox.get_children()
       for i of categoriesButtons
@@ -1034,7 +1030,7 @@ class MyApplet
       global.log e
     return
 
-  resetSearch: =>
+  resetSearch: ->
     @searchEntry.set_text ""
     @searchActive = false
     @_clearAllSelections()
@@ -1042,7 +1038,7 @@ class MyApplet
     global.stage.set_key_focus @searchEntry
     return
 
-  _onSearchTextChanged: (se, prop) =>
+  _onSearchTextChanged: (se, prop) ->
     if @menuIsOpening
       @menuIsOpening = false
       false
@@ -1054,11 +1050,11 @@ class MyApplet
       if @searchActive
         @searchEntry.set_secondary_icon @_searchActiveIcon
         if @_searchIconClickedId is 0
-          @_searchIconClickedId = @searchEntry.connect("secondary-icon-clicked", =>
+          @_searchIconClickedId = @searchEntry.connect("secondary-icon-clicked", Lang.bind(this, ->
             @resetSearch()
             @_select_category null, @_allAppsCategoryButton
             return
-          )
+          ))
         @_setCategoriesButtonActive false
         @_doSearch()
       else
@@ -1070,7 +1066,7 @@ class MyApplet
         @_select_category null, @_allAppsCategoryButton
       false
 
-  _listBookmarks: (pattern) =>
+  _listBookmarks: (pattern) ->
     bookmarks = Main.placesManager.getBookmarks()
     res = new Array()
     id = 0
@@ -1080,7 +1076,7 @@ class MyApplet
       id++
     res
 
-  _listDevices: (pattern) =>
+  _listDevices: (pattern) ->
     devices = Main.placesManager.getMounts()
     res = new Array()
     id = 0
@@ -1090,7 +1086,7 @@ class MyApplet
       id++
     res
 
-  _listApplications: (category_menu_id, pattern) =>
+  _listApplications: (category_menu_id, pattern) ->
     applist = new Array()
     if category_menu_id
       applist = category_menu_id
@@ -1106,7 +1102,7 @@ class MyApplet
       res = applist
     res
 
-  _doSearch: =>
+  _doSearch: ->
     @switchPanes "apps"  if @leftPane.get_child() is @favsBox
     pattern = @searchEntryText.get_text().replace(/^\s+/g, "").replace(/\s+$/g, "").toLowerCase()
     return false  if pattern is @_previousSearchPattern
@@ -1143,7 +1139,7 @@ class MyApplet
       item_actor._delegate.emit "enter-event"  if item_actor and item_actor isnt @searchEntry
     false
 
-  _getCompletion: (text) =>
+  _getCompletion: (text) ->
     unless text.indexOf("/") is -1
       if text.substr(text.length - 1) is "/"
         ""
@@ -1152,13 +1148,13 @@ class MyApplet
     else
       false
 
-  _getCompletions: (text) =>
+  _getCompletions: (text) ->
     unless text.indexOf("/") is -1
       @_pathCompleter.get_completions text
     else
       new Array()
 
-  _run: (input) =>
+  _run: (input) ->
     command = input
     @_commandError = false
     if input

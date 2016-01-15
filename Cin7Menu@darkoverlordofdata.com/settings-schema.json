@@ -1,4 +1,10 @@
 {
+  "menu-editor-button" : {
+    "type" : "button",
+    "description" : "Open the menu editor",
+    "callback" : "_launch_editor",
+    "tooltip" : "Press this button to customize your menu entries."
+ },
  "show-computer" : {
     "type": "combobox",
     "default": "link",
@@ -160,12 +166,6 @@
     "tooltip": "Explore My Videos"
  },
  
- "show-places" : {
-    "type" : "checkbox",
-    "default" : true,
-    "description": "Show bookmarks and places",
-    "tooltip": "Choose whether or not to show bookmarks and places in the menu."
- },
  "enable-autoscroll" : {
     "type" : "checkbox",
     "default" : true,
@@ -204,12 +204,6 @@
     "description" : "Size of the Fovorite Button Icons:",
     "tooltip" : "Change the Size of the Favorite Buttons Icons"
  },
- "show-quicklinks" : {
-    "type" : "checkbox",
-    "default" : true,
-    "description": "Show Quicklinks Sidebar",
-    "tooltip": "Choose whether or not to show the Quicklinks Sidebar."
- },
  "quicklink-options" : {
     "type": "combobox",
     "default": "both",
@@ -226,11 +220,5 @@
     "default" : true,
     "description": "Show Quicklinks Shutdown Menu",
     "tooltip": "Choose whether or not to show the Quicklinks Shutdown Menu."
- },
-  "menu-editor-button" : {
-    "type" : "button",
-    "description" : "Open the menu editor",
-    "callback" : "_launch_editor",
-    "tooltip" : "Press this button to customize your menu entries."
  }
 }
